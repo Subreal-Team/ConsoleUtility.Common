@@ -14,6 +14,6 @@
     </dependencies>-->
   </metadata>
   <files>
-    <file src="bin\Release\SubrealTeam.Windows.Common.XML" target="lib\net45\SubrealTeam.Windows.Common.xml" />
+    <file src="bin\Release\SubrealTeam.Common.XML" target="lib\net45\SubrealTeam.Common.xml" />
   </files>
 </package>

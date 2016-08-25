@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SubrealTeam.Windows.Common.ConsoleConfiguration
+namespace SubrealTeam.Common.ConsoleConfiguration
 {
 	/// <summary>
 	/// Атрибут определяющий конфигурационный параметр командной строки

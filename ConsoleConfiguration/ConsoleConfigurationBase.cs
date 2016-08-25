@@ -3,18 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using SubrealTeam.Windows.Common.Logging;
+using SubrealTeam.Common.Logging;
 
-namespace SubrealTeam.Windows.Common.ConsoleConfiguration
+namespace SubrealTeam.Common.ConsoleConfiguration
 {
 	/// <summary>
 	/// Базовый класс конфигурации консольного приложения
 	/// </summary>
 	public abstract class ConsoleConfigurationBase
 	{
+        /// <summary>
+        /// Аргументы командной строки
+        /// </summary>
 		protected string[] _arguments = Environment.GetCommandLineArgs();
 
-		protected ConsoleConfigurationBase()
+        /// <summary>
+        /// Конструктор конфигурации консольного приложения
+        /// </summary>
+        protected ConsoleConfigurationBase()
 		{
 			NotValidParameters = false;
 			NotValidParamtersMessages = new List<string>();

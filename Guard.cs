@@ -1,7 +1,7 @@
 ﻿using System;
-using SubrealTeam.Windows.Common.Extensions;
+using SubrealTeam.Common.Extensions;
 
-namespace SubrealTeam.Windows.Common
+namespace SubrealTeam.Common
 {
 	/// <summary>
 	/// Реализует методы по защите параметров и локальных переменных.

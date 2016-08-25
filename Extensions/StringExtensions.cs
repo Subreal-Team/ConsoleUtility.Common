@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace SubrealTeam.Windows.Common.Extensions
+namespace SubrealTeam.Common.Extensions
 {
 	/// <summary>
 	/// Методы расширений для строк

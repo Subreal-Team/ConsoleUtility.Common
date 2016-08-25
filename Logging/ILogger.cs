@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SubrealTeam.Windows.Common.Logging
+namespace SubrealTeam.Common.Logging
 {
 	/// <summary> Интерфейс для реализации логирования </summary>
 	public interface ILogger

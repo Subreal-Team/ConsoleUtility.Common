@@ -46,6 +46,17 @@ namespace SubrealTeam.Common.UnitTests
 			Assert.AreEqual(testConfig.NotValidParameters, true);
 			Assert.AreEqual(testConfig.NotValidParamtersMessages.Count, 1);
 		}
+
+        [Test]
+        public void TestPrintHelp()
+	    {
+            var testConfig = new TestConsoleConfiguration();
+
+	        var helpMessage = testConfig.PrintHelp(false);
+
+	        Assert.AreEqual(helpMessage,
+	            "string - StringArg\r\nchar - CharArg\r\nbool - BoolArg\r\nint - IntArg\r\ndecimal - DecimalArg\r\nfloat - FloatArg\r\ndouble - DoubleArg\r\nerror - DoubleArg\r\nwithoutdefault - WithoutDefaultArg");
+	    }
 	}
 
 	public class TestConsoleConfiguration : ConsoleConfigurationBase

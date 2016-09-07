@@ -43,10 +43,15 @@ namespace SubrealTeam.Common.ConsoleConfiguration
 		/// </summary>
 		public List<string> NotValidParamtersMessages { get; }
 
-		/// <summary>
-		/// Конструктор конфигурации консольного приложения
-		/// </summary>
-		protected ConsoleConfigurationBase()
+        /// <summary>
+        /// Кешь свойств класса с атрибутом командной строки
+        /// </summary>
+	    private AttributedPropertyInfo[] _attributedProps;
+
+        /// <summary>
+        /// Конструктор конфигурации консольного приложения
+        /// </summary>
+        protected ConsoleConfigurationBase()
 		{
 			SetArguments();
 
@@ -57,15 +62,20 @@ namespace SubrealTeam.Common.ConsoleConfiguration
 			var publicProps = typeInfo.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
 			// взять свойства с атрибутом CommandLineArgument
-			var attributedProps = publicProps.Select(x => new {property = x, customAttributes = x.GetCustomAttributes()})
+			_attributedProps = publicProps.Select(x => new {property = x, customAttributes = x.GetCustomAttributes()})
 				.Where(x => x.customAttributes.Any(y => y.GetType() == typeof(CommandLineArgumentAttribute)))
-				.ToList();
+                .Select(x => new AttributedPropertyInfo
+			    {
+			        PropertyInfo = x.property,
+                    Attributes = x.customAttributes.Select(a => a as CommandLineArgumentAttribute).ToArray()
+			    })
+				.ToArray();
 
-			foreach (var prop in attributedProps)
+			foreach (var prop in _attributedProps)
 			{
-				foreach (var attr in prop.customAttributes)
+				foreach (var attr in prop.Attributes)
 				{
-					SetPropertyValue((CommandLineArgumentAttribute) attr, prop.property);
+					SetPropertyValue(attr, prop.PropertyInfo);
 				}
 			}
 		}
@@ -124,5 +134,25 @@ namespace SubrealTeam.Common.ConsoleConfiguration
 			propertyInfo.SetValue(this, convertedValue);
 		}
 
+	    /// <summary>
+	    /// Печать описания параметров с выводом в консоль
+	    /// </summary>
+	    /// <returns>флаг вывода в консоль</returns>
+	    public string PrintHelp(bool printToConsole = true)
+	    {
+	        var helpMessage = String.Join(Environment.NewLine,
+	            _attributedProps.SelectMany(a => a.Attributes.Select(x => $"{x.Name} - {x.Description}").ToArray()));
+	        
+            if (printToConsole) Console.WriteLine(helpMessage);
+	        return helpMessage;
+	    }
+
 	}
+
+    internal class AttributedPropertyInfo
+    {
+        public PropertyInfo PropertyInfo { get; set; }
+
+        public CommandLineArgumentAttribute[] Attributes { get; set; }
+    }
 }

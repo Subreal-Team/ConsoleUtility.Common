@@ -13,36 +13,35 @@ namespace SubrealTeam.Common.ConsoleConfiguration
 	/// </summary>
 	public abstract class ConsoleConfigurationBase
 	{
-		protected string[] _arguments;
+        protected string[] _arguments;
 
-		/// <summary>
-		/// Аргументы командной строки
-		/// </summary>
-		protected string[] Arguments
-		{
-			get { return _arguments; }
-		}
+	    /// <summary>
+	    /// Аргументы командной строки
+	    /// </summary>
+	    public string[] Arguments => _arguments;
 
-		public virtual void SetArguments()
+	    /// <summary>
+	    /// Установить аргументы
+	    /// </summary>
+	    protected virtual void SetArguments()
 		{
 			_arguments = Environment.GetCommandLineArgs();
 		}
 
-
 		/// <summary>
 		/// Флаг - параметры не указаны
 		/// </summary>
-		public bool NoParameters { get { return Arguments.Length == 1; } }
+		public bool NoParameters => Arguments.Length == 1;
 
-		/// <summary>
+	    /// <summary>
 		/// Флаг ошибки считвания параметров
 		/// </summary>
-		public bool NotValidParameters { get { return NotValidParamtersMessages.Any(); } }
+		public bool NotValidParameters => NotValidParamtersMessages.Any();
 
-		/// <summary>
+	    /// <summary>
 		/// Сообщения об ошибке считывания параметров
 		/// </summary>
-		public List<string> NotValidParamtersMessages { get; private set; }
+		public List<string> NotValidParamtersMessages { get; }
 
 		/// <summary>
 		/// Конструктор конфигурации консольного приложения
@@ -88,8 +87,8 @@ namespace SubrealTeam.Common.ConsoleConfiguration
 			// неверно задан шаблон атрибута
 			if (!match.Success || match.Groups.Count <= 0)
 			{
-				var errorMessage = String.Format("Неверно задан шаблон атрибута {0}, формат: {{имя}}{{разделитель}}{{значение}}",
-					cmdAttr.ParseTemplate);
+				var errorMessage =
+				    $"Неверно задан шаблон атрибута {cmdAttr.ParseTemplate}, формат: {{имя}}{{разделитель}}{{значение}}";
 				NotValidParamtersMessages.Add(errorMessage);
 				Logger.Instance.Error(errorMessage);
 				return;
@@ -115,8 +114,8 @@ namespace SubrealTeam.Common.ConsoleConfiguration
 			}
 			catch (FormatException e)
 			{
-				var errorMessage = String.Format("Ошибка конвертирования параметра \"{0}\", тип аргумента: \"{1}\"", cmdValue,
-					propertyInfo.PropertyType.Name);
+				var errorMessage =
+				    $"Ошибка конвертирования параметра \"{cmdValue}\", тип аргумента: \"{propertyInfo.PropertyType.Name}\"";
 				NotValidParamtersMessages.Add(errorMessage);
 				Logger.Instance.Error(errorMessage);
 				return;

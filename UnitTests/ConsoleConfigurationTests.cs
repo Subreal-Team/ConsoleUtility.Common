@@ -50,7 +50,7 @@ namespace SubrealTeam.Common.UnitTests
 
 	public class TestConsoleConfiguration : ConsoleConfigurationBase
 	{
-		public override void SetArguments()
+	    protected override void SetArguments()
 		{
 			_arguments = new[] { 
 				"string=" + ConsoleConfigurationTests.TestStringArg, 

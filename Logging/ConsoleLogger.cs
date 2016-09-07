@@ -9,52 +9,73 @@ namespace SubrealTeam.Common.Logging
 	{
 		public ILogger GetNamedLogger(string loggerName)
 		{
-			throw new NotImplementedException();
-		}
+            return new ConsoleLogger();
+        }
 
 		public void Debug(string format, params object[] args)
 		{
-			Console.WriteLine("{0} [DEBUG]: {1}", DateTime.Now.ToString("O"), String.Format(format, args));
-		}
+            Console.WriteLine($"{DateTime.Now:O} [DEBUG]: {String.Format(format, args)}");
+        }
 
 		public void Error(string format, params object[] args)
 		{
-			Console.WriteLine("{0} [ERROR]: {1}", DateTime.Now.ToString("O"), String.Format(format, args));
-		}
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"{DateTime.Now:O} [ERROR]: {String.Format(format, args)}");
+            Console.ForegroundColor = color;
+        }
 
 		public void Error(Exception exception, string message = null)
 		{
-			throw new NotImplementedException();
-		}
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"{DateTime.Now:O} [ERROR]: {message}. {exception.Message}");
+            Console.ForegroundColor = color;
+        }
 
 		public void Error(Exception exception, string format, params object[] args)
 		{
-			throw new NotImplementedException();
-		}
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"{DateTime.Now:O} [ERROR]: {String.Format(format, args)}. {exception.Message}");
+            Console.ForegroundColor = color;
+        }
 
 		public void Fatal(string format, params object[] args)
 		{
-			Console.WriteLine("{0} [FATAL]: {1}", DateTime.Now.ToString("O"), String.Format(format, args));
-		}
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"{DateTime.Now:O} [FATAL]: {String.Format(format, args)}");
+            Console.ForegroundColor = color;
+        }
 
 		public void Fatal(Exception exception, string message = null)
 		{
-			throw new NotImplementedException();
-		}
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"{DateTime.Now:O} [FATAL]: {message}. {exception.Message}");
+            Console.ForegroundColor = color;
+        }
 
 		public void Fatal(Exception exception, string format, params object[] args)
 		{
-			throw new NotImplementedException();
-		}
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"{DateTime.Now:O} [FATAL]: {String.Format(format, args)}. {exception.Message}");
+            Console.ForegroundColor = color;
+        }
 
 		public void Info(string format, params object[] args)
 		{
-			Console.WriteLine("{0} [INFO]: {1}", DateTime.Now.ToString("O"), String.Format(format, args));
-		}
+            Console.WriteLine($"{DateTime.Now:O}: {String.Format(format, args)}");
+        }
 
 		public void Warn(string format, params object[] args)
 		{
-			Console.WriteLine("{0} [WARN]: {1}", DateTime.Now.ToString("O"), String.Format(format, args));
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"{DateTime.Now:O} [WARN]: {String.Format(format, args)}");
+            Console.ForegroundColor = color;
 		}
 	}
 }

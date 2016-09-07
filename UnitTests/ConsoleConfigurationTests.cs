@@ -61,7 +61,7 @@ namespace SubrealTeam.Common.UnitTests
 				"error=" + ConsoleConfigurationTests.TestStringArg };
 		}
 
-		[CommandLineArgument("string", defaultValue: "default", description: "StringArg")]
+		[CommandLineArgument("string", defaultValue: null, description: "StringArg")]
 		public string StringArg { get; set; }
 
 		[CommandLineArgument("char", defaultValue: 'q', description: "CharArg")]

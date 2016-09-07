@@ -73,7 +73,7 @@ namespace SubrealTeam.Common.ConsoleConfiguration
 
 		private void SetPropertyValue(CommandLineArgumentAttribute cmdAttr, PropertyInfo propertyInfo)
 		{		
-			if (cmdAttr.DefaultValue == null)
+			if (cmdAttr.DefaultValue == null && propertyInfo.PropertyType.Name != "String")
 				cmdAttr.DefaultValue = Activator.CreateInstance(propertyInfo.PropertyType);
 
 			var cmdValue = Arguments.FirstOrDefault(x => x.ToUpper().StartsWith(cmdAttr.Name.ToUpper()));

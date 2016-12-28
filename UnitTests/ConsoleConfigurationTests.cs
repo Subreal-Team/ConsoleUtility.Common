@@ -18,8 +18,8 @@ namespace SubrealTeam.Common.UnitTests
 		[Ignore("")]
 		public void TestConvert()
 		{
-			string testVal = "true";
-			Type testType = typeof(bool);
+			var testVal = "true";
+			var testType = typeof(bool);
 
 			var newVal = Convert.ChangeType(testVal, testType);
 

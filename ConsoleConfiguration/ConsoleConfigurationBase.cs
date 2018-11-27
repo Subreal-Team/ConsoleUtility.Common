@@ -100,7 +100,7 @@ namespace SubrealTeam.Common.ConsoleConfiguration
 				var errorMessage =
 				    $"Неверно задан шаблон атрибута {cmdAttr.ParseTemplate}, формат: {{имя}}{{разделитель}}{{значение}}";
 				NotValidParamtersMessages.Add(errorMessage);
-				Logger.Instance.Error(errorMessage);
+				Logger.Error(errorMessage);
 				return;
 			}
 
@@ -127,7 +127,7 @@ namespace SubrealTeam.Common.ConsoleConfiguration
 				var errorMessage =
 				    $"Ошибка конвертирования параметра \"{cmdValue}\", тип аргумента: \"{propertyInfo.PropertyType.Name}\"";
 				NotValidParamtersMessages.Add(errorMessage);
-				Logger.Instance.Error(errorMessage);
+				Logger.Error(errorMessage);
 				return;
 			}
 

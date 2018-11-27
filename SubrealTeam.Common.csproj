@@ -45,6 +45,7 @@
     <Compile Include="Guard.cs" />
     <Compile Include="ConsoleConfiguration\CommandLineArgumentAttribute.cs" />
     <Compile Include="ConsoleConfiguration\ConsoleConfigurationBase.cs" />
+    <Compile Include="Logging\FileLogger.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />

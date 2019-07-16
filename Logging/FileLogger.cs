@@ -4,23 +4,32 @@ using System.Reflection;
 
 namespace SubrealTeam.Common.Logging
 {
-	/// <summary>
-	/// Реализация файлового логгера
-	/// </summary>
-	public class FileLogger : ILogger
-	{
-        private readonly string _fileName;
-
-        private readonly string _filePath;
+    /// <summary>
+    /// File Logger implementation
+    /// </summary>
+    public class FileLogger : ILogger
+    {
 
         private readonly string _fileFullName;
 
+        /// <summary>
+        /// File logger constructor
+        /// </summary>
+        /// <param name="fileName">File name for log</param>
+        /// <param name="filePath">File Path for log</param>
         public FileLogger(string fileName = null, string filePath = null)
         {
             var assembly = Assembly.GetEntryAssembly();
-            _fileName = fileName ?? $"{assembly.GetName().Name} {DateTime.Now:yyyy-MM-dd}.log";
-            _filePath = filePath ?? assembly.Location;
-            _fileFullName = Path.Combine(_filePath, _fileName);
+            if (assembly != null)
+            {
+                fileName = fileName ?? $"{assembly.GetName().Name} {DateTime.Now:yyyy-MM-dd}.log";
+                filePath = filePath ?? assembly.Location;
+                _fileFullName = Path.Combine(filePath, fileName);
+            }
+            else
+            {
+                _fileFullName = Path.Combine(Directory.GetCurrentDirectory(), $"Log {DateTime.Now:yyyy-MM-dd}.log");
+            }
 
             try
             {
@@ -52,54 +61,64 @@ namespace SubrealTeam.Common.Logging
             return $"{DateTime.Now:O}";
         }
 
-		public ILogger GetNamedLogger(string loggerName)
-		{
+        /// <inheritdoc />
+        public ILogger GetNamedLogger(string loggerName)
+        {
             return new FileLogger();
         }
 
-		public void Debug(string format, params object[] args)
-		{
+        /// <inheritdoc />
+        public void Debug(string format, params object[] args)
+        {
             AppendLog($"{GetFormattedDateTime()} [DEBUG]: {string.Format(format, args)}");
         }
 
-		public void Error(string format, params object[] args)
-		{
+        /// <inheritdoc />
+        public void Error(string format, params object[] args)
+        {
             AppendLog($"{GetFormattedDateTime()} [ERROR]: {string.Format(format, args)}");
         }
 
-		public void Error(Exception exception, string message = null)
-		{
+        /// <inheritdoc />
+        public void Error(Exception exception, string message = null)
+        {
             AppendLog($"{GetFormattedDateTime()} [ERROR]: {message}. {exception.Message}");
         }
 
-		public void Error(Exception exception, string format, params object[] args)
-		{
+        /// <inheritdoc />
+        public void Error(Exception exception, string format, params object[] args)
+        {
             AppendLog($"{GetFormattedDateTime()} [ERROR]: {string.Format(format, args)}. {exception.Message}");
         }
 
-		public void Fatal(string format, params object[] args)
-		{
+        /// <inheritdoc />
+        public void Fatal(string format, params object[] args)
+        {
             AppendLog($"{GetFormattedDateTime()} [FATAL]: {string.Format(format, args)}");
         }
 
-		public void Fatal(Exception exception, string message = null)
-		{
+        /// <inheritdoc />
+        public void Fatal(Exception exception, string message = null)
+        {
             AppendLog($"{GetFormattedDateTime()} [FATAL]: {message}. {exception.Message}");
         }
 
-		public void Fatal(Exception exception, string format, params object[] args)
-		{
+        /// <inheritdoc />
+        public void Fatal(Exception exception, string format, params object[] args)
+        {
             AppendLog($"{GetFormattedDateTime()} [FATAL]: {string.Format(format, args)}. {exception.Message}");
         }
 
-		public void Info(string format, params object[] args)
-		{
+        /// <inheritdoc />
+        public void Info(string format, params object[] args)
+        {
             AppendLog($"{GetFormattedDateTime()}: {string.Format(format, args)}");
         }
 
-		public void Warn(string format, params object[] args)
-		{
+        /// <inheritdoc />
+        public void Warn(string format, params object[] args)
+        {
             AppendLog($"{GetFormattedDateTime()} [WARN]: {string.Format(format, args)}");
-		}
-	}
+        }
+    }
 }

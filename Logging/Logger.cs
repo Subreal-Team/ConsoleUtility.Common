@@ -4,110 +4,106 @@ using System.Linq;
 
 namespace SubrealTeam.Common.Logging
 {
-	/// <summary>
-	/// Синглтон класс логирования
-	/// </summary>
-	public static class Logger
-	{
-		private static ILogger _instance;
+    /// <summary>
+    /// Singleton logging class
+    /// </summary>
+    public static class Logger
+    {
+        private static IList<ILogger> Instances { get; } = new List<ILogger>();
 
-		private static IList<ILogger> Instances { get; set; } = new List<ILogger>();
-
+        /// <summary>
+        /// Add new Instance for logging
+        /// </summary>
+        /// <param name="logger"></param>
         public static void AddInstance(ILogger logger)
         {
             Guard.IsNotNull(logger, nameof(logger));
 
-            if (!Instances.Any(x => x.GetType() == logger.GetType()))
+            if (Instances.All(x => x.GetType() != logger.GetType()))
             {
                 Instances.Add(logger);
             }
         }
 
-		///// <summary>  Получение именнованного логгера </summary>
-		//public static ILogger GetNamedLogger(String loggerName)
-		//{
-		//	return Instance.GetNamedLogger(loggerName);
-		//}
-
-		/// <summary> Логирование (уровень DEBUG) форматированной строки </summary>
-		public static void Debug(string format, params object[] args)
-		{
+        /// <summary> Logging (DEBUG level) formatted string </summary>
+        public static void Debug(string format, params object[] args)
+        {
             foreach (var instance in Instances)
             {
                 instance.Debug(format, args);
             }
-		}
+        }
 
-		/// <summary> Логирование (уровень ERROR) форматированной строки </summary>
-		public static void Error(string format, params object[] args)
-		{
+        /// <summary> Logging (ERROR level) of formatted string </summary>
+        public static void Error(string format, params object[] args)
+        {
             foreach (var instance in Instances)
             {
                 instance.Error(format, args);
             }
-		}
+        }
 
-		/// <summary>  Логирование (уровень ERROR) исключения с сообщением, если сообщение не указано - логирование исключения </summary>
-		public static void Error(Exception exception, string message = null)
-		{
+        /// <summary> Logging (ERROR level) exceptions with a message, if the message is not specified - logging an exception </summary>
+        public static void Error(Exception exception, string message = null)
+        {
             foreach (var instance in Instances)
             {
                 instance.Error(exception, message);
             }
-		}
+        }
 
-		/// <summary> Логирование (уровень ERROR) исключения с сообщением (форматированная строка) </summary>
-		public static void Error(Exception exception, string format, params object[] args)
-		{
+        /// <summary> Logging (ERROR level) exception with message (formatted string) </summary>
+        public static void Error(Exception exception, string format, params object[] args)
+        {
             foreach (var instance in Instances)
             {
                 instance.Error(exception, format, args);
             }
-		}
+        }
 
-		/// <summary> Логирование (уровень FATAL) форматированной строки </summary>
-		public static void Fatal(string format, params object[] args)
-		{
+        /// <summary> Logging (FATAL level) formatted string </summary>
+        public static void Fatal(string format, params object[] args)
+        {
             foreach (var instance in Instances)
             {
                 instance.Fatal(format, args);
             }
-		}
+        }
 
-		/// <summary> Логирование (уровень FATAL) исключения с сообщением, если сообщение не указано - логирование исключения </summary>
-		public static void Fatal(Exception exception, string message = null)
-		{
+        /// <summary> Logging (FATAL level) exceptions with a message, if the message is not specified - exception logging </summary>
+        public static void Fatal(Exception exception, string message = null)
+        {
             foreach (var instance in Instances)
             {
                 instance.Fatal(exception, message);
             }
-		}
+        }
 
-		/// <summary> Логирование (уровень FATAL) исключения с сообщением (форматированная строка) </summary>
-		public static void Fatal(Exception exception, string format, params object[] args)
-		{
+        /// <summary> Logging (FATAL level) exceptions with message (formatted string) </summary>
+        public static void Fatal(Exception exception, string format, params object[] args)
+        {
             foreach (var instance in Instances)
             {
                 instance.Fatal(exception, format, args);
             }
-		}
+        }
 
-		/// <summary> Логирование (уровень INFO) форматированной строки </summary>
-		public static void Info(string format, params object[] args)
-		{
+        /// <summary> Logging (INFO level) of formatted string </summary>
+        public static void Info(string format, params object[] args)
+        {
             foreach (var instance in Instances)
             {
                 instance.Info(format, args);
             }
-		}
+        }
 
-		/// <summary> Логирование (уровень WARN) форматированной строки </summary>
-		public static void Warn(string format, params object[] args)
-		{
+        /// <summary> Logging (WARN level) formatted string </summary>
+        public static void Warn(string format, params object[] args)
+        {
             foreach (var instance in Instances)
             {
                 instance.Warn(format, args);
             }
-		}
-	}
+        }
+    }
 }

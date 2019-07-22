@@ -19,17 +19,9 @@ namespace SubrealTeam.Common.ConsoleConfiguration
         protected string[] Arguments;
 
         /// <summary>
-        /// Set arguments
-        /// </summary>
-        protected virtual void SetArguments()
-        {
-            Arguments = Environment.GetCommandLineArgs();
-        }
-
-        /// <summary>
         /// Flag - no parameters specified
         /// </summary>
-        public bool NoParameters => Arguments.Length == 1;
+        public bool NoParameters => Arguments.Length == 0;
 
         /// <summary>
         /// Parameter read error flag
@@ -46,12 +38,17 @@ namespace SubrealTeam.Common.ConsoleConfiguration
         /// </summary>
         private readonly AttributedPropertyInfo[] _attributedProps;
 
+        public ConsoleConfigurationBase() : this(null)
+        {
+        }
+
         /// <summary>
         /// Console Application Configuration constructor
         /// </summary>
-        protected ConsoleConfigurationBase()
+        /// <param name="getArguments">Array of string to get command line arguments not from System.Environment</param>
+        protected ConsoleConfigurationBase(string[] arguments = null)
         {
-            SetArguments();
+            Arguments = arguments ?? Environment.GetCommandLineArgs();
 
             NotValidParametersMessages = new List<string>();
 
@@ -79,7 +76,9 @@ namespace SubrealTeam.Common.ConsoleConfiguration
         private void SetPropertyValue(CommandLineArgumentAttribute cmdAttr, PropertyInfo propertyInfo)
         {
             if (cmdAttr.DefaultValue == null && propertyInfo.PropertyType.Name != "String")
+            {
                 cmdAttr.DefaultValue = Activator.CreateInstance(propertyInfo.PropertyType);
+            }
 
             var cmdValue = Arguments.FirstOrDefault(x => x.ToUpper().StartsWith(cmdAttr.Name.ToUpper()));
             if (string.IsNullOrWhiteSpace(cmdValue))
@@ -106,10 +105,18 @@ namespace SubrealTeam.Common.ConsoleConfiguration
             {
                 if ((value.Length == 2) && !string.IsNullOrWhiteSpace(value[1]))
                 {
-                    if (propertyInfo.PropertyType.Name == "Decimal")
+                    if (propertyInfo.PropertyType.Name == nameof(Decimal))
                     {
                         value[1] = value[1].Replace(".", NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator)
                            .Replace(",", NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator);
+                    }
+
+                    if (propertyInfo.PropertyType.Name == nameof(Boolean) && (value[1] == "1" || value[1] == "0"))
+                    {
+                        convertedValue = value[1] == "1" ? true : false;
+
+                        propertyInfo.SetValue(this, convertedValue);
+                        return;
                     }
 
                     convertedValue = Convert.ChangeType(value[1], propertyInfo.PropertyType);

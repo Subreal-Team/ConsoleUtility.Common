@@ -11,8 +11,20 @@ namespace SubrealTeam.Common.UnitTests
         public static string TestStringArg = "testString";
         public static char TestCharArg = 'c';
         public static bool TestBoolArg = false;
+        public static int TestDigitBoolArg = 0;
         public static decimal TestDecimalArg = 5432.1m;
         public const double TestDefaultDoubleArg = 1234.5;
+
+        public static string[] TestArguments => new[]
+        {
+            "string=" + TestStringArg,
+            "char=" + TestCharArg,
+            "bool=" + TestBoolArg,
+            "boolDigit=" + TestDigitBoolArg,
+            "decimal=" + TestDecimalArg,
+            // invalid argument string with decimal parameter
+            "error=" + TestStringArg
+        };
 
         [Test]
         [Ignore("")]
@@ -30,13 +42,14 @@ namespace SubrealTeam.Common.UnitTests
 
 
         [Test]
-        public void TestGetArguments()
+        public void WhenArgumentsIsValid_ShouldSetExpectedValues()
         {
-            var testConfig = new TestConsoleConfiguration();
+            var testConfig = new TestConsoleConfiguration(TestArguments);
 
             Assert.AreEqual(testConfig.StringArg, TestStringArg);
             Assert.AreEqual(testConfig.CharArg, TestCharArg);
             Assert.AreEqual(testConfig.BoolArg, TestBoolArg);
+            Assert.AreEqual(testConfig.BoolDigitArg, TestBoolArg);
             Assert.AreEqual(testConfig.DecimalArg, TestDecimalArg);
             Assert.AreEqual(testConfig.DoubleArg, TestDefaultDoubleArg);
             Assert.AreEqual(testConfig.FloatArg, TestDefaultDoubleArg);
@@ -48,30 +61,56 @@ namespace SubrealTeam.Common.UnitTests
         }
 
         [Test]
+        public void WhenBoolArgAsOneDigits_ShouldSetTrue()
+        {
+            var testConfig = new TestConsoleConfiguration(new string[] { "bool=1" });
+
+            Assert.AreEqual(testConfig.NotValidParameters, false);
+            Assert.AreEqual(testConfig.BoolArg, true);
+        }
+
+        [Test]
+        public void WhenBoolArgAsZeroDigits_ShouldSetFalse()
+        {
+            var testConfig = new TestConsoleConfiguration(new string[] { "bool=0" });
+
+            Assert.AreEqual(testConfig.NotValidParameters, false);
+            Assert.AreEqual(testConfig.BoolArg, false);
+        }
+
+        [Test]
+        public void WhenArgumentsIsEmpty_ShouldReturnNoParametersSpecified()
+        {
+            var testConfig = new TestConsoleConfiguration(new string[] { });
+
+            Assert.AreEqual(testConfig.NoParameters, true);
+        }
+
+        [Test]
         public void TestPrintHelp()
         {
-            var testConfig = new TestConsoleConfiguration();
+            var testConfig = new TestConsoleConfiguration(TestArguments);
 
             var helpMessage = testConfig.PrintHelp(false);
 
             Assert.AreEqual(helpMessage,
-                "string - StringArg\r\nchar - CharArg\r\nbool - BoolArg\r\nint - IntArg\r\ndecimal - DecimalArg\r\nfloat - FloatArg\r\ndouble - DoubleArg\r\nerror - DoubleArg\r\nwithoutdefault - WithoutDefaultArg");
+                "string - StringArg\r\n" +
+                "char - CharArg\r\n" +
+                "bool - BoolArg\r\n" +
+                "boolDigit - BoolDigitArg\r\n" +
+                "int - IntArg\r\n" +
+                "decimal - DecimalArg\r\n" +
+                "float - FloatArg\r\n" +
+                "double - DoubleArg\r\n" +
+                "error - DoubleArg\r\n" + 
+                "withoutdefault - WithoutDefaultArg");
         }
     }
 
     public class TestConsoleConfiguration : ConsoleConfigurationBase
     {
-        protected override void SetArguments()
+        public TestConsoleConfiguration(string[] arguments = null) : base(arguments)
         {
-            Arguments = new[]
-            {
-                "string=" + ConsoleConfigurationTests.TestStringArg,
-                "char=" + ConsoleConfigurationTests.TestCharArg,
-                "bool=" + ConsoleConfigurationTests.TestBoolArg,
-                "decimal=" + ConsoleConfigurationTests.TestDecimalArg,
-                // invalid argument string with decimal parameter
-                "error=" + ConsoleConfigurationTests.TestStringArg
-            };
         }
 
         [CommandLineArgument("string", defaultValue: null, description: "StringArg")]
@@ -82,6 +121,9 @@ namespace SubrealTeam.Common.UnitTests
 
         [CommandLineArgument("bool", defaultValue: true, description: "BoolArg")]
         public bool BoolArg { get; set; }
+
+        [CommandLineArgument("boolDigit", defaultValue: true, description: "BoolDigitArg")]
+        public bool BoolDigitArg { get; set; }
 
         [CommandLineArgument("int", defaultValue: 10, description: "IntArg")]
         public int IntArg { get; set; }

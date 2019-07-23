@@ -50,9 +50,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SubrealTeam.Common.csproj">
+    <ProjectReference Include="..\SubRealTeam.Common.csproj">
       <Project>{8dc2cb47-bb68-472e-870f-89b13d52caa2}</Project>
-      <Name>SubrealTeam.Common</Name>
+      <Name>SubRealTeam.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

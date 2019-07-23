@@ -10,7 +10,9 @@ namespace SubrealTeam.Common.UnitTests
     {
         public static string TestStringArg = "testString";
         public static char TestCharArg = 'c';
+        public const char TestDefaultCharArg = 'q';
         public static bool TestBoolArg = false;
+        public const bool TestDefaultBoolArg = true;
         public static int TestDigitBoolArg = 0;
         public static decimal TestDecimalArg = 5432.1m;
         public const double TestDefaultDoubleArg = 1234.5;
@@ -61,7 +63,7 @@ namespace SubrealTeam.Common.UnitTests
         }
 
         [Test]
-        public void WhenBoolArgAsOneDigits_ShouldSetTrue()
+        public void WhenBoolArgAsOneDigit_ShouldSetTrue()
         {
             var testConfig = new TestConsoleConfiguration(new string[] { "bool=1" });
 
@@ -70,12 +72,21 @@ namespace SubrealTeam.Common.UnitTests
         }
 
         [Test]
-        public void WhenBoolArgAsZeroDigits_ShouldSetFalse()
+        public void WhenBoolArgAsZeroDigit_ShouldSetFalse()
         {
             var testConfig = new TestConsoleConfiguration(new string[] { "bool=0" });
 
-            Assert.AreEqual(testConfig.NotValidParameters, false);
-            Assert.AreEqual(testConfig.BoolArg, false);
+            Assert.IsFalse(testConfig.NotValidParameters);
+            Assert.AreEqual(false, testConfig.BoolArg);
+        }
+
+        [Test]
+        public void WhenBoolArgNotValidDigit_ShouldSetDefault()
+        {
+            var testConfig = new TestConsoleConfiguration(new string[] { "bool=2" });
+
+            Assert.IsTrue(testConfig.NotValidParameters);
+            Assert.AreEqual(default(bool), testConfig.BoolArg);
         }
 
         [Test]
@@ -83,7 +94,7 @@ namespace SubrealTeam.Common.UnitTests
         {
             var testConfig = new TestConsoleConfiguration(new string[] { });
 
-            Assert.AreEqual(testConfig.NoParameters, true);
+            Assert.IsTrue(testConfig.NoParameters);
         }
 
         [Test]
@@ -91,17 +102,17 @@ namespace SubrealTeam.Common.UnitTests
         {
             var testConfig = new TestConsoleConfiguration();
 
-            Assert.AreEqual(testConfig.StringArg, null);
-            Assert.AreEqual(testConfig.CharArg, 'q');
-            Assert.AreEqual(testConfig.BoolArg, true);
-            Assert.AreEqual(testConfig.BoolDigitArg, true);
-            Assert.AreEqual(testConfig.DecimalArg, TestDefaultDoubleArg);
-            Assert.AreEqual(testConfig.DoubleArg, TestDefaultDoubleArg);
-            Assert.AreEqual(testConfig.FloatArg, TestDefaultDoubleArg);
-            Assert.AreEqual(testConfig.ErrorArg, TestDefaultDoubleArg);
-            Assert.AreEqual(testConfig.WithoutDefaultArg, default(int));
+            Assert.AreEqual(null, testConfig.StringArg);
+            Assert.AreEqual(TestDefaultCharArg, testConfig.CharArg);
+            Assert.AreEqual(TestDefaultBoolArg, testConfig.BoolArg);
+            Assert.AreEqual(TestDefaultBoolArg, testConfig.BoolDigitArg);
+            Assert.AreEqual(TestDefaultDoubleArg, testConfig.DecimalArg);
+            Assert.AreEqual(TestDefaultDoubleArg, testConfig.DoubleArg);
+            Assert.AreEqual(TestDefaultDoubleArg, testConfig.FloatArg);
+            Assert.AreEqual(TestDefaultDoubleArg, testConfig.ErrorArg);
+            Assert.AreEqual(default(int), testConfig.WithoutDefaultArg);
 
-            Assert.AreEqual(testConfig.NotValidParameters, false);
+            Assert.IsFalse(testConfig.NotValidParameters);
         }
 
         [Test]
@@ -138,13 +149,13 @@ namespace SubrealTeam.Common.UnitTests
         [CommandLineArgument("string", defaultValue: null, description: "StringArg")]
         public string StringArg { get; set; }
 
-        [CommandLineArgument("char", defaultValue: 'q', description: "CharArg")]
+        [CommandLineArgument("char", defaultValue: ConsoleConfigurationTests.TestDefaultCharArg, description: "CharArg")]
         public char CharArg { get; set; }
 
-        [CommandLineArgument("bool", defaultValue: true, description: "BoolArg")]
+        [CommandLineArgument("bool", defaultValue: ConsoleConfigurationTests.TestDefaultBoolArg, description: "BoolArg")]
         public bool BoolArg { get; set; }
 
-        [CommandLineArgument("boolDigit", defaultValue: true, description: "BoolDigitArg")]
+        [CommandLineArgument("boolDigit", defaultValue: ConsoleConfigurationTests.TestDefaultBoolArg, description: "BoolDigitArg")]
         public bool BoolDigitArg { get; set; }
 
         [CommandLineArgument("int", defaultValue: 10, description: "IntArg")]

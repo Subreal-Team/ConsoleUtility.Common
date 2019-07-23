@@ -23,7 +23,7 @@ namespace SubrealTeam.Common.Logging
             if (assembly != null)
             {
                 fileName = fileName ?? $"{assembly.GetName().Name} {DateTime.Now:yyyy-MM-dd}.log";
-                filePath = filePath ?? assembly.Location;
+                filePath = filePath ?? Path.GetDirectoryName(assembly.Location);
                 _fileFullName = Path.Combine(filePath, fileName);
             }
             else

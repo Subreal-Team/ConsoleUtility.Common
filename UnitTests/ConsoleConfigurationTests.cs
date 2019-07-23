@@ -87,6 +87,24 @@ namespace SubrealTeam.Common.UnitTests
         }
 
         [Test]
+        public void WhenArgumentsIsNotDescribed_ShouldReturnDefault()
+        {
+            var testConfig = new TestConsoleConfiguration();
+
+            Assert.AreEqual(testConfig.StringArg, null);
+            Assert.AreEqual(testConfig.CharArg, 'q');
+            Assert.AreEqual(testConfig.BoolArg, true);
+            Assert.AreEqual(testConfig.BoolDigitArg, true);
+            Assert.AreEqual(testConfig.DecimalArg, TestDefaultDoubleArg);
+            Assert.AreEqual(testConfig.DoubleArg, TestDefaultDoubleArg);
+            Assert.AreEqual(testConfig.FloatArg, TestDefaultDoubleArg);
+            Assert.AreEqual(testConfig.ErrorArg, TestDefaultDoubleArg);
+            Assert.AreEqual(testConfig.WithoutDefaultArg, default(int));
+
+            Assert.AreEqual(testConfig.NotValidParameters, false);
+        }
+
+        [Test]
         public void TestPrintHelp()
         {
             var testConfig = new TestConsoleConfiguration(TestArguments);
@@ -102,13 +120,17 @@ namespace SubrealTeam.Common.UnitTests
                 "decimal - DecimalArg\r\n" +
                 "float - FloatArg\r\n" +
                 "double - DoubleArg\r\n" +
-                "error - DoubleArg\r\n" + 
+                "error - ErrorArg\r\n" + 
                 "withoutdefault - WithoutDefaultArg");
         }
     }
 
     public class TestConsoleConfiguration : ConsoleConfigurationBase
     {
+        public TestConsoleConfiguration()
+        {
+        }
+
         public TestConsoleConfiguration(string[] arguments = null) : base(arguments)
         {
         }
@@ -141,7 +163,7 @@ namespace SubrealTeam.Common.UnitTests
         public double DoubleArg { get; set; }
 
         [CommandLineArgument("error", defaultValue: ConsoleConfigurationTests.TestDefaultDoubleArg,
-            description: "DoubleArg")]
+            description: "ErrorArg")]
         public decimal ErrorArg { get; set; }
 
         [CommandLineArgument("withoutdefault", description: "WithoutDefaultArg")]

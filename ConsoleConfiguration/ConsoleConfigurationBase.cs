@@ -38,17 +38,20 @@ namespace SubrealTeam.Common.ConsoleConfiguration
         /// </summary>
         private readonly AttributedPropertyInfo[] _attributedProps;
 
+        /// <summary>
+        /// Console Configuration constructor
+        /// </summary>
         public ConsoleConfigurationBase() : this(null)
         {
         }
 
         /// <summary>
-        /// Console Application Configuration constructor
+        /// Console Configuration constructor
         /// </summary>
-        /// <param name="getArguments">Array of string to get command line arguments not from System.Environment</param>
+        /// <param name="arguments">Array of string to get command line arguments not from System.Environment</param>
         protected ConsoleConfigurationBase(string[] arguments = null)
         {
-            Arguments = arguments ?? Environment.GetCommandLineArgs();
+            Arguments = arguments ?? Environment.GetCommandLineArgs().Skip(1).ToArray();
 
             NotValidParametersMessages = new List<string>();
 

@@ -1,4 +1,4 @@
-﻿using SubrealTeam.Common.Logging;
+﻿using SubRealTeam.Common.Logging;
 
 namespace TestConsole
 {

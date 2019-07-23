@@ -1,7 +1,7 @@
 ﻿using System;
-using SubrealTeam.Common.Extensions;
+using SubRealTeam.Common.Extensions;
 
-namespace SubrealTeam.Common
+namespace SubRealTeam.Common
 {
     /// <summary>
     /// Implements methods for protecting parameters and local variables.

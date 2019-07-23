@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SubrealTeam.Common.Logging
+namespace SubRealTeam.Common.Logging
 {
     /// <summary>
     /// Console Logger implementation

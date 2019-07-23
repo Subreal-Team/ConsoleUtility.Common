@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using SubrealTeam.Common.Logging;
+using SubRealTeam.Common.Logging;
 
-namespace SubrealTeam.Common.ConsoleConfiguration
+namespace SubRealTeam.Common.ConsoleConfiguration
 {
     /// <summary>
     /// Base class configuration of the console application

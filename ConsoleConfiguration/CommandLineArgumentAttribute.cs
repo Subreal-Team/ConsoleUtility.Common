@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SubrealTeam.Common.ConsoleConfiguration
+namespace SubRealTeam.Common.ConsoleConfiguration
 {
     /// <summary>
     /// Attribute defining command line configuration parameter

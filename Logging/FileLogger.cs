@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace SubrealTeam.Common.Logging
+namespace SubRealTeam.Common.Logging
 {
     /// <summary>
     /// File Logger implementation

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SubrealTeam.Common.Logging
+namespace SubRealTeam.Common.Logging
 {
     /// <summary>
     /// Singleton logging class

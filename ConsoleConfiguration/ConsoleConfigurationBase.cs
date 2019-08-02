@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using SubRealTeam.Common.Logging;
+using SubRealTeam.ConsoleUtility.Common.Logging;
 
-namespace SubRealTeam.Common.ConsoleConfiguration
+namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
 {
     /// <summary>
     /// Base class configuration of the console application
@@ -58,7 +58,7 @@ namespace SubRealTeam.Common.ConsoleConfiguration
             var typeInfo = this.GetType();
             var publicProps = typeInfo.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            _attributedProps = publicProps.Select(x => new {property = x, customAttributes = x.GetCustomAttributes()})
+            _attributedProps = publicProps.Select(x => new {property = x, customAttributes = x.GetCustomAttributes(true)})
                .Where(x => x.customAttributes.Any(y => y.GetType() == typeof(CommandLineArgumentAttribute)))
                .Select(x => new AttributedPropertyInfo
                 {
@@ -86,7 +86,7 @@ namespace SubRealTeam.Common.ConsoleConfiguration
             var cmdValue = Arguments.FirstOrDefault(x => x.ToUpper().StartsWith(cmdAttr.Name.ToUpper()));
             if (string.IsNullOrWhiteSpace(cmdValue))
             {
-                propertyInfo.SetValue(this, Convert.ChangeType(cmdAttr.DefaultValue, propertyInfo.PropertyType));
+                propertyInfo.SetValue(this, Convert.ChangeType(cmdAttr.DefaultValue, propertyInfo.PropertyType), null);
                 return;
             }
 
@@ -118,7 +118,7 @@ namespace SubRealTeam.Common.ConsoleConfiguration
                     {
                         convertedValue = value[1] == "1" ? true : false;
 
-                        propertyInfo.SetValue(this, convertedValue);
+                        propertyInfo.SetValue(this, convertedValue, null);
                         return;
                     }
 
@@ -129,13 +129,13 @@ namespace SubRealTeam.Common.ConsoleConfiguration
             catch (FormatException e)
             {
                 var errorMessage =
-                    $"Error converting parameter \"{cmdValue}\", argument type: \"{propertyInfo.PropertyType.Name}\"";
+                    $"Error converting parameter \"{cmdValue}\", argument type: \"{propertyInfo.PropertyType.Name}\", Exception message: {e.Message}.";
                 NotValidParametersMessages.Add(errorMessage);
                 Logger.Error(errorMessage);
                 return;
             }
 
-            propertyInfo.SetValue(this, convertedValue);
+            propertyInfo.SetValue(this, convertedValue, null);
         }
 
         /// <summary>

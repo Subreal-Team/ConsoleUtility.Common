@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace SubRealTeam.Common.Logging
+namespace SubRealTeam.ConsoleUtility.Common.Logging
 {
     /// <summary>
     /// File Logger implementation
@@ -33,15 +33,9 @@ namespace SubRealTeam.Common.Logging
 
             try
             {
-                FileStream fileStream;
-                if (!File.Exists(_fileFullName))
-                {
-                    fileStream = File.Create(_fileFullName);
-                }
-                else
-                {
-                    fileStream = File.OpenWrite(_fileFullName);
-                }
+                var fileStream = !File.Exists(_fileFullName) 
+                    ? File.Create(_fileFullName) 
+                    : File.OpenWrite(_fileFullName);
 
                 fileStream.Close();
             }

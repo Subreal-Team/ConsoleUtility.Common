@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using NUnit.Framework;
-using SubRealTeam.Common.ConsoleConfiguration;
+using SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration;
 
-namespace SubRealTeam.Common.UnitTests
+namespace SubRealTeam.ConsoleUtility.Common.UnitTests
 {
     [TestFixture]
     public class ConsoleConfigurationTests

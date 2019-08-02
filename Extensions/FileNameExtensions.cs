@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace SubRealTeam.Common.Extensions
+namespace SubRealTeam.ConsoleUtility.Common.Extensions
 {
     /// <summary>
     /// File Name Extensions

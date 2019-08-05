@@ -41,7 +41,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// <summary>
         /// Console Configuration constructor
         /// </summary>
-        public ConsoleConfigurationBase() : this(null)
+        protected ConsoleConfigurationBase() : this(null)
         {
         }
 
@@ -86,7 +86,15 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
             var cmdValue = Arguments.FirstOrDefault(x => x.ToUpper().StartsWith(cmdAttr.Name.ToUpper()));
             if (string.IsNullOrWhiteSpace(cmdValue))
             {
-                propertyInfo.SetValue(this, Convert.ChangeType(cmdAttr.DefaultValue, propertyInfo.PropertyType), null);
+                if (propertyInfo.CanWrite)
+                {
+                    propertyInfo.SetValue(this, Convert.ChangeType(cmdAttr.DefaultValue, propertyInfo.PropertyType), null);
+                }
+                else
+                {
+                    throw new InvalidOperationException($"The {propertyInfo.Name} property does not have a public setter.");
+                }
+                
                 return;
             }
 

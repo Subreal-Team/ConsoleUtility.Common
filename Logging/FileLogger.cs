@@ -15,8 +15,8 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
         /// <summary>
         /// File logger constructor
         /// </summary>
-        /// <param name="fileName">File name for log</param>
-        /// <param name="filePath">File Path for log</param>
+        /// <param name="fileName">File name for log (default is current date in format YYYY-MM-DD.log)</param>
+        /// <param name="filePath">File Path for log (default is current directory)</param>
         public FileLogger(string fileName = null, string filePath = null)
         {
             var assembly = Assembly.GetEntryAssembly();
@@ -47,7 +47,7 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
 
         private void AppendLog(string message)
         {
-            File.AppendAllText(_fileFullName, message);
+            File.AppendAllText(_fileFullName, Environment.NewLine + message);
         }
 
         private string GetFormattedDateTime()

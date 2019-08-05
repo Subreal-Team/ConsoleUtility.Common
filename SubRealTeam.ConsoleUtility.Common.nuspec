@@ -13,7 +13,4 @@
       <dependency id="" version=""/>
     </dependencies>-->
   </metadata>
-  <files>
-    <file src="bin\Release\SubRealTeam.Common.XML" target="lib\net45\SubRealTeam.Common.xml" />
-  </files>
 </package>

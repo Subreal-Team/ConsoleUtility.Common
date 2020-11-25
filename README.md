@@ -1,4 +1,4 @@
-# Win.Utility.Common
+# ConsoleUtility.Common
 
 This library contains common classes which used in MS Windows utilities console applications.
 

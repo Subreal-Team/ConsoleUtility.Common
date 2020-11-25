@@ -7,7 +7,7 @@ namespace TestConsole
         // TODO - add any template processing, like this
         private const string ParseTemplate = "/{name}:{value}";
 
-        [CommandLineArgument("LogToFile", defaultValue: true)]
+        [CommandLineArgument("LogToFile", defaultValue: true, description: "Log to test file")]
         public bool IsLogToFile { get; set; }
     }
 }

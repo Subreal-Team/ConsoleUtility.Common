@@ -78,23 +78,25 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
 
         private void SetPropertyValue(CommandLineArgumentAttribute cmdAttr, PropertyInfo propertyInfo)
         {
-            if (cmdAttr.DefaultValue == null && propertyInfo.PropertyType.Name != "String")
-            {
-                cmdAttr.DefaultValue = Activator.CreateInstance(propertyInfo.PropertyType);
-            }
-
             var cmdValue = Arguments.FirstOrDefault(x => x.ToUpper().StartsWith(cmdAttr.Name.ToUpper()));
             if (string.IsNullOrWhiteSpace(cmdValue))
             {
+                if (!cmdAttr.DefaultValueIsSetup)
+                {
+                    return;
+                }
+
                 if (propertyInfo.CanWrite)
                 {
-                    propertyInfo.SetValue(this, Convert.ChangeType(cmdAttr.DefaultValue, propertyInfo.PropertyType), null);
+                    propertyInfo.SetValue(this, Convert.ChangeType(cmdAttr.DefaultValue, propertyInfo.PropertyType),
+                        null);
                 }
                 else
                 {
-                    throw new InvalidOperationException($"The {propertyInfo.Name} property does not have a public setter.");
+                    throw new InvalidOperationException(
+                        $"The {propertyInfo.Name} property does not have a public setter.");
                 }
-                
+
                 return;
             }
 
@@ -124,7 +126,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
 
                     if (propertyInfo.PropertyType.Name == nameof(Boolean) && (value[1] == "1" || value[1] == "0"))
                     {
-                        convertedValue = value[1] == "1" ? true : false;
+                        convertedValue = value[1] == "1";
 
                         propertyInfo.SetValue(this, convertedValue, null);
                         return;
@@ -152,8 +154,11 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// <returns>Console output flag</returns>
         public string PrintHelp(bool printToConsole = true)
         {
+            Func<CommandLineArgumentAttribute, string> helpParameterDescription = x =>
+                $"{x.Name} - {x.Description}{(x.DefaultValueIsSetup ? $" (default value is '{x.DefaultValue}')" : string.Empty)}";
+
             var helpMessage = string.Join(Environment.NewLine,
-                _attributedProps.SelectMany(a => a.Attributes.Select(x => $"{x.Name} - {x.Description}").ToArray()));
+                _attributedProps.SelectMany(a => a.Attributes.Select(helpParameterDescription).ToArray()));
 
             if (printToConsole) Console.WriteLine(helpMessage);
             return helpMessage;

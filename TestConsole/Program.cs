@@ -15,6 +15,8 @@ namespace TestConsole
                 Logger.AddInstance(new FileLogger());
             }
 
+            testConfig.PrintHelp();
+
             Logger.Info("TestConsole was started.");
 
             Logger.Debug("TestConsole is in process.");

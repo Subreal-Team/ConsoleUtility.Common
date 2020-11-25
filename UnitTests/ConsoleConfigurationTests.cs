@@ -14,6 +14,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         public static bool TestBoolArg = false;
         public const bool TestDefaultBoolArg = true;
         public static int TestDigitBoolArg = 0;
+        public const int TestDefaultIntArg = 10;
         public static decimal TestDecimalArg = 5432.1m;
         public const double TestDefaultDoubleArg = 1234.5;
 
@@ -65,7 +66,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         [Test]
         public void WhenBoolArgAsOneDigit_ShouldSetTrue()
         {
-            var testConfig = new TestConsoleConfiguration(new string[] { "bool=1" });
+            var testConfig = new TestConsoleConfiguration(new[] { "bool=1" });
 
             Assert.AreEqual(testConfig.NotValidParameters, false);
             Assert.AreEqual(testConfig.BoolArg, true);
@@ -74,7 +75,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         [Test]
         public void WhenBoolArgAsZeroDigit_ShouldSetFalse()
         {
-            var testConfig = new TestConsoleConfiguration(new string[] { "bool=0" });
+            var testConfig = new TestConsoleConfiguration(new[] { "bool=0" });
 
             Assert.IsFalse(testConfig.NotValidParameters);
             Assert.AreEqual(false, testConfig.BoolArg);
@@ -83,7 +84,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         [Test]
         public void WhenBoolArgNotValidDigit_ShouldSetDefault()
         {
-            var testConfig = new TestConsoleConfiguration(new string[] { "bool=2" });
+            var testConfig = new TestConsoleConfiguration(new[] { "bool=2" });
 
             Assert.IsTrue(testConfig.NotValidParameters);
             Assert.AreEqual(default(bool), testConfig.BoolArg);
@@ -118,20 +119,23 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         [Test]
         public void TestPrintHelp()
         {
+            static string DefaultValueDescription(object value) =>
+                value != null ? $" (default value is '{value}')" : string.Empty;
+
             var testConfig = new TestConsoleConfiguration(TestArguments);
 
             var helpMessage = testConfig.PrintHelp(false);
 
             Assert.AreEqual(helpMessage,
-                "string - StringArg\r\n" +
-                "char - CharArg\r\n" +
-                "bool - BoolArg\r\n" +
-                "boolDigit - BoolDigitArg\r\n" +
-                "int - IntArg\r\n" +
-                "decimal - DecimalArg\r\n" +
-                "float - FloatArg\r\n" +
-                "double - DoubleArg\r\n" +
-                "error - ErrorArg\r\n" + 
+                "string - StringArg" + DefaultValueDescription(null) + "\r\n" +
+                "char - CharArg" + DefaultValueDescription(TestDefaultCharArg) + "\r\n" +
+                "bool - BoolArg" + DefaultValueDescription(TestDefaultBoolArg) + "\r\n" +
+                "boolDigit - BoolDigitArg" + DefaultValueDescription(TestDefaultBoolArg) + "\r\n" +
+                "int - IntArg" + DefaultValueDescription(TestDefaultIntArg) + "\r\n" +
+                "decimal - DecimalArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" +
+                "float - FloatArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" +
+                "double - DoubleArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" +
+                "error - ErrorArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" + 
                 "withoutdefault - WithoutDefaultArg");
         }
     }
@@ -158,7 +162,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         [CommandLineArgument("boolDigit", defaultValue: ConsoleConfigurationTests.TestDefaultBoolArg, description: "BoolDigitArg")]
         public bool BoolDigitArg { get; set; }
 
-        [CommandLineArgument("int", defaultValue: 10, description: "IntArg")]
+        [CommandLineArgument("int", defaultValue: ConsoleConfigurationTests.TestDefaultIntArg, description: "IntArg")]
         public int IntArg { get; set; }
 
         [CommandLineArgument("decimal", defaultValue: ConsoleConfigurationTests.TestDefaultDoubleArg,

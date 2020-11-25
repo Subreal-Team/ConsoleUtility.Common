@@ -20,6 +20,11 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
             Name = name;
             ParseTemplate = parseTemplate;
             DefaultValue = defaultValue;
+            if (defaultValue != null)
+            {
+                DefaultValueIsSetup = true;
+            }
+
             Description = description;
         }
 
@@ -38,11 +43,13 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// <summary>
         /// Default value
         /// </summary>
-        public object DefaultValue { get; set; }
+        public object DefaultValue { get; }
+
+        public bool DefaultValueIsSetup { get; }
 
         /// <summary>
         /// Description
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; }
     }
 }

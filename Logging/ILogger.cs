@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SubRealTeam.Common.Logging
+namespace SubRealTeam.ConsoleUtility.Common.Logging
 {
     /// <summary> Interface for implementing logging</summary>
     public interface ILogger

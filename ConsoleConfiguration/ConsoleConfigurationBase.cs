@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using SubRealTeam.Common.Logging;
+using SubRealTeam.ConsoleUtility.Common.Logging;
 
-namespace SubRealTeam.Common.ConsoleConfiguration
+namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
 {
     /// <summary>
     /// Base class configuration of the console application
@@ -41,7 +41,7 @@ namespace SubRealTeam.Common.ConsoleConfiguration
         /// <summary>
         /// Console Configuration constructor
         /// </summary>
-        public ConsoleConfigurationBase() : this(null)
+        protected ConsoleConfigurationBase() : this(null)
         {
         }
 
@@ -58,7 +58,7 @@ namespace SubRealTeam.Common.ConsoleConfiguration
             var typeInfo = this.GetType();
             var publicProps = typeInfo.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            _attributedProps = publicProps.Select(x => new {property = x, customAttributes = x.GetCustomAttributes()})
+            _attributedProps = publicProps.Select(x => new {property = x, customAttributes = x.GetCustomAttributes(true)})
                .Where(x => x.customAttributes.Any(y => y.GetType() == typeof(CommandLineArgumentAttribute)))
                .Select(x => new AttributedPropertyInfo
                 {
@@ -78,15 +78,25 @@ namespace SubRealTeam.Common.ConsoleConfiguration
 
         private void SetPropertyValue(CommandLineArgumentAttribute cmdAttr, PropertyInfo propertyInfo)
         {
-            if (cmdAttr.DefaultValue == null && propertyInfo.PropertyType.Name != "String")
-            {
-                cmdAttr.DefaultValue = Activator.CreateInstance(propertyInfo.PropertyType);
-            }
-
             var cmdValue = Arguments.FirstOrDefault(x => x.ToUpper().StartsWith(cmdAttr.Name.ToUpper()));
             if (string.IsNullOrWhiteSpace(cmdValue))
             {
-                propertyInfo.SetValue(this, Convert.ChangeType(cmdAttr.DefaultValue, propertyInfo.PropertyType));
+                if (!cmdAttr.DefaultValueIsSetup)
+                {
+                    return;
+                }
+
+                if (propertyInfo.CanWrite)
+                {
+                    propertyInfo.SetValue(this, Convert.ChangeType(cmdAttr.DefaultValue, propertyInfo.PropertyType),
+                        null);
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        $"The {propertyInfo.Name} property does not have a public setter.");
+                }
+
                 return;
             }
 
@@ -116,9 +126,9 @@ namespace SubRealTeam.Common.ConsoleConfiguration
 
                     if (propertyInfo.PropertyType.Name == nameof(Boolean) && (value[1] == "1" || value[1] == "0"))
                     {
-                        convertedValue = value[1] == "1" ? true : false;
+                        convertedValue = value[1] == "1";
 
-                        propertyInfo.SetValue(this, convertedValue);
+                        propertyInfo.SetValue(this, convertedValue, null);
                         return;
                     }
 
@@ -129,13 +139,13 @@ namespace SubRealTeam.Common.ConsoleConfiguration
             catch (FormatException e)
             {
                 var errorMessage =
-                    $"Error converting parameter \"{cmdValue}\", argument type: \"{propertyInfo.PropertyType.Name}\"";
+                    $"Error converting parameter \"{cmdValue}\", argument type: \"{propertyInfo.PropertyType.Name}\", Exception message: {e.Message}.";
                 NotValidParametersMessages.Add(errorMessage);
                 Logger.Error(errorMessage);
                 return;
             }
 
-            propertyInfo.SetValue(this, convertedValue);
+            propertyInfo.SetValue(this, convertedValue, null);
         }
 
         /// <summary>
@@ -144,8 +154,11 @@ namespace SubRealTeam.Common.ConsoleConfiguration
         /// <returns>Console output flag</returns>
         public string PrintHelp(bool printToConsole = true)
         {
+            Func<CommandLineArgumentAttribute, string> helpParameterDescription = x =>
+                $"{x.Name} - {x.Description}{(x.DefaultValueIsSetup ? $" (default value is '{x.DefaultValue}')" : string.Empty)}";
+
             var helpMessage = string.Join(Environment.NewLine,
-                _attributedProps.SelectMany(a => a.Attributes.Select(x => $"{x.Name} - {x.Description}").ToArray()));
+                _attributedProps.SelectMany(a => a.Attributes.Select(helpParameterDescription).ToArray()));
 
             if (printToConsole) Console.WriteLine(helpMessage);
             return helpMessage;

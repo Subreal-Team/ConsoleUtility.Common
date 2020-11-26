@@ -1,6 +1,6 @@
 @echo off
 set path=.
-set packageName=SubRealTeam.Common
+set packageName=SubRealTeam.ConsoleUtility.Common
 if not [%1]==[] set path=%1
 
 IF NOT EXIST Packages MKDIR Packages

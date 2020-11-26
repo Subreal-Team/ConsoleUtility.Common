@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SubRealTeam.Common.ConsoleConfiguration
+namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
 {
     /// <summary>
     /// Attribute defining command line configuration parameter
@@ -20,6 +20,11 @@ namespace SubRealTeam.Common.ConsoleConfiguration
             Name = name;
             ParseTemplate = parseTemplate;
             DefaultValue = defaultValue;
+            if (defaultValue != null)
+            {
+                DefaultValueIsSetup = true;
+            }
+
             Description = description;
         }
 
@@ -38,11 +43,13 @@ namespace SubRealTeam.Common.ConsoleConfiguration
         /// <summary>
         /// Default value
         /// </summary>
-        public object DefaultValue { get; set; }
+        public object DefaultValue { get; }
+
+        public bool DefaultValueIsSetup { get; }
 
         /// <summary>
         /// Description
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; }
     }
 }

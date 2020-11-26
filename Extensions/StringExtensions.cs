@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace SubRealTeam.Common.Extensions
+namespace SubRealTeam.ConsoleUtility.Common.Extensions
 {
     /// <summary>
     /// String Extensions

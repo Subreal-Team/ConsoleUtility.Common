@@ -1,12 +1,7 @@
 ﻿using NUnit.Framework;
-using SubRealTeam.Common.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SubRealTeam.ConsoleUtility.Common.Logging;
 
-namespace SubRealTeam.Common.UnitTests
+namespace SubRealTeam.ConsoleUtility.Common.UnitTests
 {
     [TestFixture]
     public class LoggerTests

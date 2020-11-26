@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SubRealTeam.Common.UnitTests")]
+[assembly: AssemblyTitle("SubRealTeam.ConsoleUtility.Common.UnitTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SubRealTeam.Common.UnitTests")]
+[assembly: AssemblyProduct("SubRealTeam.ConsoleUtility.Common.UnitTests")]
 [assembly: AssemblyCopyright("Copyright © SubRealTeam 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -8,17 +8,17 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
     [TestFixture]
     public class ConsoleConfigurationTests
     {
-        public static string TestStringArg = "testString";
-        public static char TestCharArg = 'c';
+        private const string TestStringArg = "testString";
+        private const char TestCharArg = 'c';
         public const char TestDefaultCharArg = 'q';
-        public static bool TestBoolArg = false;
+        private const bool TestBoolArg = false;
         public const bool TestDefaultBoolArg = true;
-        public static int TestDigitBoolArg = 0;
+        private const int TestDigitBoolArg = 0;
         public const int TestDefaultIntArg = 10;
-        public static decimal TestDecimalArg = 5432.1m;
+        private const decimal TestDecimalArg = 5432.1m;
         public const double TestDefaultDoubleArg = 1234.5;
 
-        public static string[] TestArguments => new[]
+        private static string[] TestArguments => new[]
         {
             "string=" + TestStringArg,
             "char=" + TestCharArg,
@@ -30,17 +30,22 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         };
 
         [Test]
-        [Ignore("")]
         public void TestConvert()
         {
             var testVal = "true";
             var testType = typeof(bool);
 
             var newVal = Convert.ChangeType(testVal, testType);
+            Assert.IsTrue((bool)newVal);
 
             testVal = "10,";
             testType = typeof(int);
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            Assert.Throws<FormatException>(() => Convert.ChangeType(testVal, testType));
+
+            testType = typeof(decimal);
             newVal = Convert.ChangeType(testVal, testType);
+            Assert.AreEqual(10m, (decimal)newVal);
         }
 
 

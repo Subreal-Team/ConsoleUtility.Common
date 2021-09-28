@@ -143,6 +143,28 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
                 "error - ErrorArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" + 
                 "withoutdefault - WithoutDefaultArg");
         }
+
+        [Test]
+        [TestCase("string", false), TestCase("String", false)]
+        [TestCase("Char", false), TestCase("char", false)]
+        [TestCase("Bool", false), TestCase("bool", false)]
+        [TestCase("BoolDigit", false), TestCase("boolDigit", false)]
+        [TestCase("Int", true), TestCase("int", true)]
+        [TestCase("Decimal", false), TestCase("decimal", false)]
+        [TestCase("Float", true), TestCase("float", true)]
+        [TestCase("Double", true), TestCase("double", true)]
+        [TestCase("Error", false), TestCase("error", false)]
+        [TestCase("WithoutDefault", false), TestCase("withoutdefault", false)]
+        public void TestGetCommandLineArgumentInfo(string argName, bool byDefault)
+        {
+            var testConfig = new TestConsoleConfiguration(TestArguments);
+
+            var commandLineArgumentInfo = testConfig.GetCommandLineArgumentInfo(argName);
+            
+            Assert.IsNotNull(commandLineArgumentInfo);
+            Assert.IsTrue(string.Equals(argName, commandLineArgumentInfo.Name, StringComparison.OrdinalIgnoreCase));
+            Assert.AreEqual(byDefault, commandLineArgumentInfo.SetupByDefault);
+        }
     }
 
     public class TestConsoleConfiguration : ConsoleConfigurationBase

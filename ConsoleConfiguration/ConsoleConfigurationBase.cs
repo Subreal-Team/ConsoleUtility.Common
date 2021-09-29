@@ -63,7 +63,8 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
                .Select(x => new CommandLinePropertyInfo
                 {
                     PropertyInfo = x.property,
-                    Attribute = x.customAttributes.First() as CommandLineArgumentAttribute
+                    Attribute = x.customAttributes.First(y => y.GetType() == typeof(CommandLineArgumentAttribute)) as CommandLineArgumentAttribute,
+                    Required = x.customAttributes.FirstOrDefault(y => y.GetType() == typeof(RequiredArgumentAttribute)) != null
                 })
                .ToArray();
 
@@ -83,6 +84,13 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
             {
                 if (!cmdAttr.DefaultValueIsSetup)
                 {
+                    if (commandLinePropertyInfo.Required)
+                    {
+                        var errorMessage = $"Attribute '{cmdAttr.Name}' requires a value";
+                        NotValidParametersMessages.Add(errorMessage);
+                        Logger.Error(errorMessage);
+                    }
+                    
                     return;
                 }
 
@@ -130,6 +138,13 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
                     {
                         convertedValue = value[1] == "1";
 
+                        propertyInfo.SetValue(this, convertedValue, null);
+                        return;
+                    }
+
+                    if (propertyInfo.PropertyType.IsEnum)
+                    {
+                        convertedValue = Enum.Parse(propertyInfo.PropertyType, value[1]);
                         propertyInfo.SetValue(this, convertedValue, null);
                         return;
                     }
@@ -194,5 +209,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         public object Value { get; set; }
 
         public bool SetupByDefault { get; set; }
+        
+        public bool Required { get; set; }
     }
 }

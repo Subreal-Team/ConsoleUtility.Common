@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleConfiguration\CommandLineArgumentInfo.cs" />
+    <Compile Include="ConsoleConfiguration\RequiredArgumentAttribute.cs" />
     <Compile Include="Extensions\FileNameExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Guard.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

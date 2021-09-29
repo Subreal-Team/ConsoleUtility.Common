@@ -71,7 +71,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         [Test]
         public void WhenBoolArgAsOneDigit_ShouldSetTrue()
         {
-            var testConfig = new TestConsoleConfiguration(new[] { "bool=1" });
+            var testConfig = new TestConsoleConfiguration(new[] { "string=a", "bool=1" });
 
             Assert.AreEqual(testConfig.NotValidParameters, false);
             Assert.AreEqual(testConfig.BoolArg, true);
@@ -80,7 +80,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         [Test]
         public void WhenBoolArgAsZeroDigit_ShouldSetFalse()
         {
-            var testConfig = new TestConsoleConfiguration(new[] { "bool=0" });
+            var testConfig = new TestConsoleConfiguration(new[] { "string=a", "bool=0" });
 
             Assert.IsFalse(testConfig.NotValidParameters);
             Assert.AreEqual(false, testConfig.BoolArg);
@@ -106,9 +106,9 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         [Test]
         public void WhenArgumentsIsNotDescribed_ShouldReturnDefault()
         {
-            var testConfig = new TestConsoleConfiguration();
+            var testConfig = new TestConsoleConfiguration(new[] { "string=a" });
 
-            Assert.AreEqual(null, testConfig.StringArg);
+            Assert.AreEqual("a", testConfig.StringArg);
             Assert.AreEqual(TestDefaultCharArg, testConfig.CharArg);
             Assert.AreEqual(TestDefaultBoolArg, testConfig.BoolArg);
             Assert.AreEqual(TestDefaultBoolArg, testConfig.BoolDigitArg);
@@ -118,7 +118,20 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
             Assert.AreEqual(TestDefaultDoubleArg, testConfig.ErrorArg);
             Assert.AreEqual(default(int), testConfig.WithoutDefaultArg);
 
+            Assert.IsEmpty(testConfig.NotValidParametersMessages);
             Assert.IsFalse(testConfig.NotValidParameters);
+        }
+        
+        [Test]
+        public void WhenRequiredArgumentNotSetup_ShouldAddNotValidParametersMessages()
+        {
+            var testConfig = new TestConsoleConfiguration();
+
+            Assert.AreEqual(null, testConfig.StringArg);
+
+            Assert.IsNotEmpty(testConfig.NotValidParametersMessages);
+            Assert.IsTrue(testConfig.NotValidParameters);
+            Assert.AreEqual("Attribute 'string' requires a value", testConfig.NotValidParametersMessages[0]);
         }
 
         [Test]
@@ -178,6 +191,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         }
 
         [CommandLineArgument("string", defaultValue: null, description: "StringArg")]
+        [RequiredArgument]
         public string StringArg { get; set; }
 
         [CommandLineArgument("char", defaultValue: ConsoleConfigurationTests.TestDefaultCharArg, description: "CharArg")]

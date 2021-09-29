@@ -8,17 +8,17 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
     [TestFixture]
     public class ConsoleConfigurationTests
     {
-        public static string TestStringArg = "testString";
-        public static char TestCharArg = 'c';
+        private const string TestStringArg = "testString";
+        private const char TestCharArg = 'c';
         public const char TestDefaultCharArg = 'q';
-        public static bool TestBoolArg = false;
+        private const bool TestBoolArg = false;
         public const bool TestDefaultBoolArg = true;
-        public static int TestDigitBoolArg = 0;
+        private const int TestDigitBoolArg = 0;
         public const int TestDefaultIntArg = 10;
-        public static decimal TestDecimalArg = 5432.1m;
+        private const decimal TestDecimalArg = 5432.1m;
         public const double TestDefaultDoubleArg = 1234.5;
 
-        public static string[] TestArguments => new[]
+        private static string[] TestArguments => new[]
         {
             "string=" + TestStringArg,
             "char=" + TestCharArg,
@@ -30,17 +30,22 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         };
 
         [Test]
-        [Ignore("")]
         public void TestConvert()
         {
             var testVal = "true";
             var testType = typeof(bool);
 
             var newVal = Convert.ChangeType(testVal, testType);
+            Assert.IsTrue((bool)newVal);
 
             testVal = "10,";
             testType = typeof(int);
+            // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+            Assert.Throws<FormatException>(() => Convert.ChangeType(testVal, testType));
+
+            testType = typeof(decimal);
             newVal = Convert.ChangeType(testVal, testType);
+            Assert.AreEqual(10m, (decimal)newVal);
         }
 
 
@@ -66,7 +71,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         [Test]
         public void WhenBoolArgAsOneDigit_ShouldSetTrue()
         {
-            var testConfig = new TestConsoleConfiguration(new[] { "bool=1" });
+            var testConfig = new TestConsoleConfiguration(new[] { "string=a", "bool=1" });
 
             Assert.AreEqual(testConfig.NotValidParameters, false);
             Assert.AreEqual(testConfig.BoolArg, true);
@@ -75,7 +80,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         [Test]
         public void WhenBoolArgAsZeroDigit_ShouldSetFalse()
         {
-            var testConfig = new TestConsoleConfiguration(new[] { "bool=0" });
+            var testConfig = new TestConsoleConfiguration(new[] { "string=a", "bool=0" });
 
             Assert.IsFalse(testConfig.NotValidParameters);
             Assert.AreEqual(false, testConfig.BoolArg);
@@ -101,9 +106,9 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         [Test]
         public void WhenArgumentsIsNotDescribed_ShouldReturnDefault()
         {
-            var testConfig = new TestConsoleConfiguration();
+            var testConfig = new TestConsoleConfiguration(new[] { "string=a" });
 
-            Assert.AreEqual(null, testConfig.StringArg);
+            Assert.AreEqual("a", testConfig.StringArg);
             Assert.AreEqual(TestDefaultCharArg, testConfig.CharArg);
             Assert.AreEqual(TestDefaultBoolArg, testConfig.BoolArg);
             Assert.AreEqual(TestDefaultBoolArg, testConfig.BoolDigitArg);
@@ -113,7 +118,20 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
             Assert.AreEqual(TestDefaultDoubleArg, testConfig.ErrorArg);
             Assert.AreEqual(default(int), testConfig.WithoutDefaultArg);
 
+            Assert.IsEmpty(testConfig.NotValidParametersMessages);
             Assert.IsFalse(testConfig.NotValidParameters);
+        }
+        
+        [Test]
+        public void WhenRequiredArgumentNotSetup_ShouldAddNotValidParametersMessages()
+        {
+            var testConfig = new TestConsoleConfiguration();
+
+            Assert.AreEqual(null, testConfig.StringArg);
+
+            Assert.IsNotEmpty(testConfig.NotValidParametersMessages);
+            Assert.IsTrue(testConfig.NotValidParameters);
+            Assert.AreEqual("Attribute 'string' requires a value", testConfig.NotValidParametersMessages[0]);
         }
 
         [Test]
@@ -138,6 +156,28 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
                 "error - ErrorArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" + 
                 "withoutdefault - WithoutDefaultArg");
         }
+
+        [Test]
+        [TestCase("string", false), TestCase("String", false)]
+        [TestCase("Char", false), TestCase("char", false)]
+        [TestCase("Bool", false), TestCase("bool", false)]
+        [TestCase("BoolDigit", false), TestCase("boolDigit", false)]
+        [TestCase("Int", true), TestCase("int", true)]
+        [TestCase("Decimal", false), TestCase("decimal", false)]
+        [TestCase("Float", true), TestCase("float", true)]
+        [TestCase("Double", true), TestCase("double", true)]
+        [TestCase("Error", false), TestCase("error", false)]
+        [TestCase("WithoutDefault", false), TestCase("withoutdefault", false)]
+        public void TestGetCommandLineArgumentInfo(string argName, bool byDefault)
+        {
+            var testConfig = new TestConsoleConfiguration(TestArguments);
+
+            var commandLineArgumentInfo = testConfig.GetCommandLineArgumentInfo(argName);
+            
+            Assert.IsNotNull(commandLineArgumentInfo);
+            Assert.IsTrue(string.Equals(argName, commandLineArgumentInfo.Name, StringComparison.OrdinalIgnoreCase));
+            Assert.AreEqual(byDefault, commandLineArgumentInfo.SetupByDefault);
+        }
     }
 
     public class TestConsoleConfiguration : ConsoleConfigurationBase
@@ -151,6 +191,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         }
 
         [CommandLineArgument("string", defaultValue: null, description: "StringArg")]
+        [RequiredArgument]
         public string StringArg { get; set; }
 
         [CommandLineArgument("char", defaultValue: ConsoleConfigurationTests.TestDefaultCharArg, description: "CharArg")]

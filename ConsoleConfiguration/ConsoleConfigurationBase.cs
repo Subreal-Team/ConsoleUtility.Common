@@ -16,12 +16,12 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// <summary>
         /// 
         /// </summary>
-        protected string[] Arguments;
+        private readonly string[] _arguments;
 
         /// <summary>
         /// Flag - no parameters specified
         /// </summary>
-        public bool NoParameters => Arguments.Length == 0;
+        public bool NoParameters => _arguments.Length == 0;
 
         /// <summary>
         /// Parameter read error flag
@@ -36,7 +36,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// <summary>
         /// Cache class properties with command line attribute
         /// </summary>
-        private readonly AttributedPropertyInfo[] _attributedProps;
+        private readonly CommandLinePropertyInfo[] _attributedProps;
 
         /// <summary>
         /// Console Configuration constructor
@@ -51,7 +51,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// <param name="arguments">Array of string to get command line arguments not from System.Environment</param>
         protected ConsoleConfigurationBase(string[] arguments = null)
         {
-            Arguments = arguments ?? Environment.GetCommandLineArgs().Skip(1).ToArray();
+            _arguments = arguments ?? Environment.GetCommandLineArgs().Skip(1).ToArray();
 
             NotValidParametersMessages = new List<string>();
 
@@ -60,36 +60,46 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
 
             _attributedProps = publicProps.Select(x => new {property = x, customAttributes = x.GetCustomAttributes(true)})
                .Where(x => x.customAttributes.Any(y => y.GetType() == typeof(CommandLineArgumentAttribute)))
-               .Select(x => new AttributedPropertyInfo
+               .Select(x => new CommandLinePropertyInfo
                 {
                     PropertyInfo = x.property,
-                    Attributes = x.customAttributes.Select(a => a as CommandLineArgumentAttribute).ToArray()
+                    Attribute = x.customAttributes.First(y => y.GetType() == typeof(CommandLineArgumentAttribute)) as CommandLineArgumentAttribute,
+                    Required = x.customAttributes.FirstOrDefault(y => y.GetType() == typeof(RequiredArgumentAttribute)) != null
                 })
                .ToArray();
 
             foreach (var prop in _attributedProps)
             {
-                foreach (var attr in prop.Attributes)
-                {
-                    SetPropertyValue(attr, prop.PropertyInfo);
-                }
+                SetPropertyValue(prop);
             }
         }
 
-        private void SetPropertyValue(CommandLineArgumentAttribute cmdAttr, PropertyInfo propertyInfo)
+        private void SetPropertyValue(CommandLinePropertyInfo commandLinePropertyInfo)
         {
-            var cmdValue = Arguments.FirstOrDefault(x => x.ToUpper().StartsWith(cmdAttr.Name.ToUpper()));
+            var cmdAttr = commandLinePropertyInfo.Attribute;
+            var propertyInfo = commandLinePropertyInfo.PropertyInfo;
+
+            var cmdValue = _arguments.FirstOrDefault(x => x.ToUpper().StartsWith(cmdAttr.Name.ToUpper()));
             if (string.IsNullOrWhiteSpace(cmdValue))
             {
                 if (!cmdAttr.DefaultValueIsSetup)
                 {
+                    if (commandLinePropertyInfo.Required)
+                    {
+                        var errorMessage = $"Attribute '{cmdAttr.Name}' requires a value";
+                        NotValidParametersMessages.Add(errorMessage);
+                        Logger.Error(errorMessage);
+                    }
+                    
                     return;
                 }
 
                 if (propertyInfo.CanWrite)
                 {
-                    propertyInfo.SetValue(this, Convert.ChangeType(cmdAttr.DefaultValue, propertyInfo.PropertyType),
-                        null);
+                    var attrValue = Convert.ChangeType(cmdAttr.DefaultValue, propertyInfo.PropertyType);
+                    commandLinePropertyInfo.Value = attrValue;
+                    commandLinePropertyInfo.SetupByDefault = true;
+                    propertyInfo.SetValue(this, attrValue, null);
                 }
                 else
                 {
@@ -116,12 +126,12 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
             object convertedValue;
             try
             {
-                if ((value.Length == 2) && !string.IsNullOrWhiteSpace(value[1]))
+                if (value.Length == 2 && !string.IsNullOrWhiteSpace(value[1]))
                 {
                     if (propertyInfo.PropertyType.Name == nameof(Decimal))
                     {
                         value[1] = value[1].Replace(".", NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator)
-                           .Replace(",", NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator);
+                            .Replace(",", NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator);
                     }
 
                     if (propertyInfo.PropertyType.Name == nameof(Boolean) && (value[1] == "1" || value[1] == "0"))
@@ -132,9 +142,19 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
                         return;
                     }
 
+                    if (propertyInfo.PropertyType.IsEnum)
+                    {
+                        convertedValue = Enum.Parse(propertyInfo.PropertyType, value[1]);
+                        propertyInfo.SetValue(this, convertedValue, null);
+                        return;
+                    }
+
                     convertedValue = Convert.ChangeType(value[1], propertyInfo.PropertyType);
                 }
-                else convertedValue = Convert.ChangeType(cmdAttr.DefaultValue, propertyInfo.PropertyType);
+                else
+                {
+                    convertedValue = Convert.ChangeType(cmdAttr.DefaultValue, propertyInfo.PropertyType);
+                }
             }
             catch (FormatException e)
             {
@@ -145,6 +165,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
                 return;
             }
 
+            commandLinePropertyInfo.Value = convertedValue;
             propertyInfo.SetValue(this, convertedValue, null);
         }
 
@@ -158,18 +179,37 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
                 $"{x.Name} - {x.Description}{(x.DefaultValueIsSetup ? $" (default value is '{x.DefaultValue}')" : string.Empty)}";
 
             var helpMessage = string.Join(Environment.NewLine,
-                _attributedProps.SelectMany(a => a.Attributes.Select(helpParameterDescription).ToArray()));
+                _attributedProps.Select(a => helpParameterDescription(a.Attribute)));
 
             if (printToConsole) Console.WriteLine(helpMessage);
             return helpMessage;
         }
 
+        public CommandLineArgumentInfo GetCommandLineArgumentInfo(string name)
+        {
+            return _attributedProps.Where(
+                    x => string.Equals(x.Attribute.Name, name, StringComparison.OrdinalIgnoreCase))
+                .Select(
+                    x => new CommandLineArgumentInfo(
+                        x.PropertyInfo,
+                        x.SetupByDefault,
+                        x.Attribute.Name,
+                        x.Value))
+                .FirstOrDefault();
+        }
+
     }
 
-    internal class AttributedPropertyInfo
+    internal class CommandLinePropertyInfo
     {
         public PropertyInfo PropertyInfo { get; set; }
 
-        public CommandLineArgumentAttribute[] Attributes { get; set; }
+        public CommandLineArgumentAttribute Attribute { get; set; }
+
+        public object Value { get; set; }
+
+        public bool SetupByDefault { get; set; }
+        
+        public bool Required { get; set; }
     }
 }

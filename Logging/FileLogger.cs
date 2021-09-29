@@ -61,27 +61,33 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
             return new FileLogger();
         }
 
+        public LogLevel LogLevel { get; set; }
+
         /// <inheritdoc />
         public void Debug(string format, params object[] args)
         {
+            if (LogLevel > LogLevel.Debug) return;
             AppendLog($"{GetFormattedDateTime()} [DEBUG]: {string.Format(format, args)}");
         }
 
         /// <inheritdoc />
         public void Error(string format, params object[] args)
         {
+            if (LogLevel > LogLevel.Error) return;
             AppendLog($"{GetFormattedDateTime()} [ERROR]: {string.Format(format, args)}");
         }
 
         /// <inheritdoc />
         public void Error(Exception exception, string message = null)
         {
+            if (LogLevel > LogLevel.Error) return;
             AppendLog($"{GetFormattedDateTime()} [ERROR]: {message}. {exception.Message}");
         }
 
         /// <inheritdoc />
         public void Error(Exception exception, string format, params object[] args)
         {
+            if (LogLevel > LogLevel.Error) return;
             AppendLog($"{GetFormattedDateTime()} [ERROR]: {string.Format(format, args)}. {exception.Message}");
         }
 
@@ -106,12 +112,14 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
         /// <inheritdoc />
         public void Info(string format, params object[] args)
         {
+            if (LogLevel > LogLevel.Info) return;
             AppendLog($"{GetFormattedDateTime()}: {string.Format(format, args)}");
         }
 
         /// <inheritdoc />
         public void Warn(string format, params object[] args)
         {
+            if (LogLevel > LogLevel.Warn) return;
             AppendLog($"{GetFormattedDateTime()} [WARN]: {string.Format(format, args)}");
         }
     }

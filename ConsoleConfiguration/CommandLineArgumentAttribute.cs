@@ -5,6 +5,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
     /// <summary>
     /// Attribute defining command line configuration parameter
     /// </summary>
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     public class CommandLineArgumentAttribute : Attribute
     {
         /// <summary>

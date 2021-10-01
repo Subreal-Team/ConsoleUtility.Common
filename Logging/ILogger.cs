@@ -8,6 +8,9 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
         /// <summary> Getting the named logger </summary>
         ILogger GetNamedLogger(string loggerName);
         
+        /// <summary>
+        /// Log Level
+        /// </summary>
         LogLevel LogLevel { get; set; }
 
         /// <summary> Logging (DEBUG level) formatted string </summary>

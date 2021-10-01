@@ -13,6 +13,9 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
             return new ConsoleLogger();
         }
 
+        /// <summary>
+        /// Log Level
+        /// </summary>
         public LogLevel LogLevel { get; set; }
 
         /// <inheritdoc />

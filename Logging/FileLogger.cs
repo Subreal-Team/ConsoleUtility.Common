@@ -61,6 +61,9 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
             return new FileLogger();
         }
 
+        /// <summary>
+        /// Log level
+        /// </summary>
         public LogLevel LogLevel { get; set; }
 
         /// <inheritdoc />

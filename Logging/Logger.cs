@@ -25,6 +25,11 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
             }
         }
 
+        /// <summary>
+        /// Set the Log Level for logger instance
+        /// </summary>
+        /// <param name="level"></param>
+        /// <typeparam name="TLogger"></typeparam>
         public static void SetLogLevelForInstance<TLogger>(LogLevel level)
         {
             var logger = Instances.FirstOrDefault(x => x is TLogger);

@@ -1,16 +1,17 @@
-﻿<?xml version="1.0"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+<?xml version="1.0" encoding="utf-8"?>
+<package >
   <metadata>
-    <id>$id$</id>
-    <version>$version$</version>
-    <title>$id$</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <id>SubRealTeam.ConsoleUtility.Common</id>
+    <version>1.0.3.0-RC2</version>
+    <title>SubRealTeam.ConsoleUtility.Common</title>
+    <authors>SubReal,Team</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Description</description>
-    <copyright>Copyright © Subreal-Team 2019</copyright>
-    <!--<dependencies>
-      <dependency id="" version=""/>
-    </dependencies>-->
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/Subreal-Team/ConsoleUtility.Common</projectUrl>
+    <iconUrl>http://icon_url_here_or_delete_this_line/</iconUrl>
+    <description>This library contains common classes which used in MS Windows utilities console applications.</description>
+    <releaseNotes>add required attribute; add printing default values; add get info method</releaseNotes>
+    <copyright>Copyright © 2021, SubReal Team</copyright>
+    <tags>console utility logger configuration</tags>
   </metadata>
 </package>

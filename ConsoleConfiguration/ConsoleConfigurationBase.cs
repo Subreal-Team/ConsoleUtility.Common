@@ -185,6 +185,10 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
             return helpMessage;
         }
 
+        /// <summary>
+        /// Get command line argument information
+        /// </summary>
+        /// <param name="name">Argument name</param>
         public CommandLineArgumentInfo GetCommandLineArgumentInfo(string name)
         {
             return _attributedProps.Where(

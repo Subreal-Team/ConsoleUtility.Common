@@ -46,6 +46,9 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// </summary>
         public object DefaultValue { get; }
 
+        /// <summary>
+        /// Indicates that default is specified
+        /// </summary>
         public bool DefaultValueIsSetup { get; }
 
         /// <summary>

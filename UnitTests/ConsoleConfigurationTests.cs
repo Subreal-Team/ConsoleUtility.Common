@@ -153,15 +153,15 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
 
             var helpMessage = testConfig.PrintHelp(false);
 
-            Assert.That("string - StringArg" + DefaultValueDescription(null) + "\r\n" +
-                "char - CharArg" + DefaultValueDescription(TestDefaultCharArg) + "\r\n" +
-                "bool - BoolArg" + DefaultValueDescription(TestDefaultBoolArg) + "\r\n" +
-                "boolDigit - BoolDigitArg" + DefaultValueDescription(TestDefaultBoolArg) + "\r\n" +
-                "int - IntArg" + DefaultValueDescription(TestDefaultIntArg) + "\r\n" +
-                "decimal - DecimalArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" +
-                "float - FloatArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" +
-                "double - DoubleArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" +
-                "error - ErrorArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" + 
+            Assert.That("string - StringArg" + DefaultValueDescription(null) + Environment.NewLine +
+                "char - CharArg" + DefaultValueDescription(TestDefaultCharArg) + Environment.NewLine +
+                "bool - BoolArg" + DefaultValueDescription(TestDefaultBoolArg) + Environment.NewLine +
+                "boolDigit - BoolDigitArg" + DefaultValueDescription(TestDefaultBoolArg) + Environment.NewLine +
+                "int - IntArg" + DefaultValueDescription(TestDefaultIntArg) + Environment.NewLine +
+                "decimal - DecimalArg" + DefaultValueDescription(TestDefaultDoubleArg) + Environment.NewLine +
+                "float - FloatArg" + DefaultValueDescription(TestDefaultDoubleArg) + Environment.NewLine +
+                "double - DoubleArg" + DefaultValueDescription(TestDefaultDoubleArg) + Environment.NewLine +
+                "error - ErrorArg" + DefaultValueDescription(TestDefaultDoubleArg) + Environment.NewLine + 
                 "withoutdefault - WithoutDefaultArg", Is.EqualTo(helpMessage));
         }
 

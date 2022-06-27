@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SubRealTeam.ConsoleUtility.Common.Logging
+﻿namespace SubRealTeam.ConsoleUtility.Common.Logging
 {
     /// <summary>
     /// Console Logger implementation
@@ -36,7 +34,7 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
         }
 
         /// <inheritdoc />
-        public void Error(Exception exception, string message = null)
+        public void Error(Exception exception, string? message = null)
         {
             if (LogLevel > LogLevel.Error) return;
             var color = Console.ForegroundColor;
@@ -65,7 +63,7 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
         }
 
         /// <inheritdoc />
-        public void Fatal(Exception exception, string message = null)
+        public void Fatal(Exception exception, string? message = null)
         {
             var color = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;

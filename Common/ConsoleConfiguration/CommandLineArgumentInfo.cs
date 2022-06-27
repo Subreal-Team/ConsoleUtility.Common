@@ -15,7 +15,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// <param name="setupByDefault">Flag indicates that argument is setup with default value</param>
         /// <param name="name">Argument name</param>
         /// <param name="value">Argument current value</param>
-        public CommandLineArgumentInfo(PropertyInfo propertyInfo, bool setupByDefault, string name, object value)
+        public CommandLineArgumentInfo(PropertyInfo propertyInfo, bool setupByDefault, string name, object? value)
         {
             PropertyInfo = propertyInfo;
             SetupByDefault = setupByDefault;
@@ -38,6 +38,6 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// <summary>
         /// Argument current value
         /// </summary>
-        public object Value { get; }
+        public object? Value { get; }
     }
 }

@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
+﻿namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
 {
     /// <summary>
     /// Attribute defining command line configuration parameter
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Property)]
     public class CommandLineArgumentAttribute : Attribute
     {
         /// <summary>
@@ -16,7 +14,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// <param name="defaultValue">Default value. default: ""</param>
         /// <param name="description">Description of the parameter.</param>
         public CommandLineArgumentAttribute(string name, string parseTemplate = "{name}={value}",
-            object defaultValue = null, string description = "")
+            object? defaultValue = null, string description = "")
         {
             Name = name;
             ParseTemplate = parseTemplate;
@@ -44,7 +42,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// <summary>
         /// Default value
         /// </summary>
-        public object DefaultValue { get; }
+        public object? DefaultValue { get; }
 
         /// <summary>
         /// Indicates that default is specified

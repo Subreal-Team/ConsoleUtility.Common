@@ -20,7 +20,7 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
         void Error(string format, params object[] args);
 
         /// <summary> Logging (ERROR level) exceptions with a message, if the message is not specified - logging an exception </summary>
-        void Error(Exception exception, string message = null);
+        void Error(Exception exception, string? message = null);
 
         /// <summary> Logging (ERROR level) exception with message (formatted string) </summary>
         void Error(Exception exception, string format, params object[] args);
@@ -29,7 +29,7 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
         void Fatal(string format, params object[] args);
 
         /// <summary> Logging (FATAL level) exceptions with a message, if the message is not specified - exception logging </summary>
-        void Fatal(Exception exception, string message = null);
+        void Fatal(Exception exception, string? message = null);
 
         /// <summary> Logging (FATAL level) exceptions with message (formatted string) </summary>
         void Fatal(Exception exception, string format, params object[] args);

@@ -29,7 +29,7 @@ namespace TestConsole
             Logger.Debug("TestConsole is in process.");
 
             var testInfo = testConfig.GetCommandLineArgumentInfo("logToFile");
-            Logger.Info($"Argument {testInfo.Name} = {testInfo.Value}. Setup by default is {testInfo.SetupByDefault}");
+            Logger.Info($"Argument {testInfo?.Name} = {testInfo?.Value}. Setup by default is {testInfo?.SetupByDefault}");
 
             Logger.Info("TestConsole end process.");
         }

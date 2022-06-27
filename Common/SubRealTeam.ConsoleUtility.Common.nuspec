@@ -2,13 +2,13 @@
 <package >
   <metadata>
     <id>SubRealTeam.ConsoleUtility.Common</id>
-    <version>1.0.3.0-RC2</version>
+    <version>2.0.1.0-RC1</version>
     <title>SubRealTeam.ConsoleUtility.Common</title>
     <authors>SubReal,Team</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/Subreal-Team/ConsoleUtility.Common</projectUrl>
-    <iconUrl>http://icon_url_here_or_delete_this_line/</iconUrl>
+    <!--<iconUrl>http://icon_url_here_or_delete_this_line/</iconUrl>-->
     <description>This library contains common classes which used in MS Windows utilities console applications.</description>
     <releaseNotes>add required attribute; add printing default values; add get info method</releaseNotes>
     <copyright>Copyright © 2021, SubReal Team</copyright>

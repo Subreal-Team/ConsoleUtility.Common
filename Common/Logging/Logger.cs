@@ -58,7 +58,7 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
         }
 
         /// <summary> Logging (ERROR level) exceptions with a message, if the message is not specified - logging an exception </summary>
-        public static void Error(Exception exception, string message = null)
+        public static void Error(Exception exception, string? message = null)
         {
             foreach (var instance in Instances)
             {
@@ -85,7 +85,7 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
         }
 
         /// <summary> Logging (FATAL level) exceptions with a message, if the message is not specified - exception logging </summary>
-        public static void Fatal(Exception exception, string message = null)
+        public static void Fatal(Exception exception, string? message = null)
         {
             foreach (var instance in Instances)
             {

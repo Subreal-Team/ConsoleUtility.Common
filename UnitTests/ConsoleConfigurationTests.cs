@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration;
 
 namespace SubRealTeam.ConsoleUtility.Common.UnitTests
@@ -45,7 +43,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
 
             testType = typeof(decimal);
             newVal = Convert.ChangeType(testVal, testType);
-            Assert.AreEqual(10m, (decimal)newVal);
+            Assert.That((decimal)newVal, Is.EqualTo(10m));
         }
 
 
@@ -53,46 +51,54 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         public void WhenArgumentsIsValid_ShouldSetExpectedValues()
         {
             var testConfig = new TestConsoleConfiguration(TestArguments);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testConfig.StringArg, Is.EqualTo(TestStringArg));
+                Assert.That(testConfig.CharArg, Is.EqualTo(TestCharArg));
+                Assert.That(testConfig.BoolArg, Is.EqualTo(TestBoolArg));
+                Assert.That(testConfig.BoolDigitArg, Is.EqualTo(TestBoolArg));
+                Assert.That(testConfig.DecimalArg, Is.EqualTo(TestDecimalArg));
+                Assert.That(testConfig.DoubleArg, Is.EqualTo(TestDefaultDoubleArg));
+                Assert.That(testConfig.FloatArg, Is.EqualTo(TestDefaultDoubleArg));
+                Assert.That(testConfig.ErrorArg, Is.Not.EqualTo(TestDefaultDoubleArg));
+                Assert.That(testConfig.WithoutDefaultArg, Is.EqualTo(0));
 
-            Assert.AreEqual(testConfig.StringArg, TestStringArg);
-            Assert.AreEqual(testConfig.CharArg, TestCharArg);
-            Assert.AreEqual(testConfig.BoolArg, TestBoolArg);
-            Assert.AreEqual(testConfig.BoolDigitArg, TestBoolArg);
-            Assert.AreEqual(testConfig.DecimalArg, TestDecimalArg);
-            Assert.AreEqual(testConfig.DoubleArg, TestDefaultDoubleArg);
-            Assert.AreEqual(testConfig.FloatArg, TestDefaultDoubleArg);
-            Assert.AreNotEqual(testConfig.ErrorArg, TestDefaultDoubleArg);
-            Assert.AreEqual(testConfig.WithoutDefaultArg, 0);
-
-            Assert.AreEqual(testConfig.NotValidParameters, true);
-            Assert.AreEqual(testConfig.NotValidParametersMessages.Count, 1);
+                Assert.That(testConfig.NotValidParameters, Is.EqualTo(true));
+                Assert.That(testConfig.NotValidParametersMessages, Has.Count.EqualTo(1));
+            });
         }
 
         [Test]
         public void WhenBoolArgAsOneDigit_ShouldSetTrue()
         {
             var testConfig = new TestConsoleConfiguration(new[] { "string=a", "bool=1" });
-
-            Assert.AreEqual(testConfig.NotValidParameters, false);
-            Assert.AreEqual(testConfig.BoolArg, true);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testConfig.NotValidParameters, Is.EqualTo(false));
+                Assert.That(testConfig.BoolArg, Is.EqualTo(true));
+            });
         }
 
         [Test]
         public void WhenBoolArgAsZeroDigit_ShouldSetFalse()
         {
             var testConfig = new TestConsoleConfiguration(new[] { "string=a", "bool=0" });
-
-            Assert.IsFalse(testConfig.NotValidParameters);
-            Assert.AreEqual(false, testConfig.BoolArg);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testConfig.NotValidParameters, Is.False);
+                Assert.That(testConfig.BoolArg, Is.EqualTo(false));
+            });
         }
 
         [Test]
         public void WhenBoolArgNotValidDigit_ShouldSetDefault()
         {
             var testConfig = new TestConsoleConfiguration(new[] { "bool=2" });
-
-            Assert.IsTrue(testConfig.NotValidParameters);
-            Assert.AreEqual(default(bool), testConfig.BoolArg);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testConfig.NotValidParameters, Is.True);
+                Assert.That(testConfig.BoolArg, Is.EqualTo(default(bool)));
+            });
         }
 
         [Test]
@@ -100,52 +106,54 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         {
             var testConfig = new TestConsoleConfiguration(new string[] { });
 
-            Assert.IsTrue(testConfig.NoParameters);
+            Assert.That(testConfig.NoParameters, Is.True);
         }
 
         [Test]
         public void WhenArgumentsIsNotDescribed_ShouldReturnDefault()
         {
             var testConfig = new TestConsoleConfiguration(new[] { "string=a" });
+            Assert.Multiple(() =>
+            {
+                Assert.That(testConfig.StringArg, Is.EqualTo("a"));
+                Assert.That(testConfig.CharArg, Is.EqualTo(TestDefaultCharArg));
+                Assert.That(testConfig.BoolArg, Is.EqualTo(TestDefaultBoolArg));
+                Assert.That(testConfig.BoolDigitArg, Is.EqualTo(TestDefaultBoolArg));
+                Assert.That(testConfig.DecimalArg, Is.EqualTo(TestDefaultDoubleArg));
+                Assert.That(testConfig.DoubleArg, Is.EqualTo(TestDefaultDoubleArg));
+                Assert.That(testConfig.FloatArg, Is.EqualTo(TestDefaultDoubleArg));
+                Assert.That(testConfig.ErrorArg, Is.EqualTo(TestDefaultDoubleArg));
+                Assert.That(testConfig.WithoutDefaultArg, Is.EqualTo(default(int)));
 
-            Assert.AreEqual("a", testConfig.StringArg);
-            Assert.AreEqual(TestDefaultCharArg, testConfig.CharArg);
-            Assert.AreEqual(TestDefaultBoolArg, testConfig.BoolArg);
-            Assert.AreEqual(TestDefaultBoolArg, testConfig.BoolDigitArg);
-            Assert.AreEqual(TestDefaultDoubleArg, testConfig.DecimalArg);
-            Assert.AreEqual(TestDefaultDoubleArg, testConfig.DoubleArg);
-            Assert.AreEqual(TestDefaultDoubleArg, testConfig.FloatArg);
-            Assert.AreEqual(TestDefaultDoubleArg, testConfig.ErrorArg);
-            Assert.AreEqual(default(int), testConfig.WithoutDefaultArg);
-
-            Assert.IsEmpty(testConfig.NotValidParametersMessages);
-            Assert.IsFalse(testConfig.NotValidParameters);
+                Assert.That(testConfig.NotValidParametersMessages, Is.Empty);
+                Assert.That(testConfig.NotValidParameters, Is.False);
+            });
         }
-        
+
         [Test]
         public void WhenRequiredArgumentNotSetup_ShouldAddNotValidParametersMessages()
         {
             var testConfig = new TestConsoleConfiguration();
-
-            Assert.AreEqual(null, testConfig.StringArg);
-
-            Assert.IsNotEmpty(testConfig.NotValidParametersMessages);
-            Assert.IsTrue(testConfig.NotValidParameters);
-            Assert.AreEqual("Attribute 'string' requires a value", testConfig.NotValidParametersMessages[0]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(testConfig.StringArg, Is.EqualTo(null));
+                Assert.That(testConfig.NotValidParametersMessages, Is.Not.Empty);
+                Assert.That(testConfig.NotValidParameters, Is.True);
+            });
+            Assert.That(testConfig.NotValidParametersMessages[0], Is.EqualTo("Attribute 'string' requires a value"));
         }
 
         [Test]
         public void TestPrintHelp()
         {
-            static string DefaultValueDescription(object value) =>
+            static string DefaultValueDescription(object? value) =>
                 value != null ? $" (default value is '{value}')" : string.Empty;
 
             var testConfig = new TestConsoleConfiguration(TestArguments);
 
             var helpMessage = testConfig.PrintHelp(false);
 
-            Assert.AreEqual(helpMessage,
-                "string - StringArg" + DefaultValueDescription(null) + "\r\n" +
+            Assert.That("string - StringArg" + DefaultValueDescription(null) + "\r\n" +
                 "char - CharArg" + DefaultValueDescription(TestDefaultCharArg) + "\r\n" +
                 "bool - BoolArg" + DefaultValueDescription(TestDefaultBoolArg) + "\r\n" +
                 "boolDigit - BoolDigitArg" + DefaultValueDescription(TestDefaultBoolArg) + "\r\n" +
@@ -154,7 +162,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
                 "float - FloatArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" +
                 "double - DoubleArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" +
                 "error - ErrorArg" + DefaultValueDescription(TestDefaultDoubleArg) + "\r\n" + 
-                "withoutdefault - WithoutDefaultArg");
+                "withoutdefault - WithoutDefaultArg", Is.EqualTo(helpMessage));
         }
 
         [Test]
@@ -173,10 +181,12 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
             var testConfig = new TestConsoleConfiguration(TestArguments);
 
             var commandLineArgumentInfo = testConfig.GetCommandLineArgumentInfo(argName);
-            
-            Assert.IsNotNull(commandLineArgumentInfo);
-            Assert.IsTrue(string.Equals(argName, commandLineArgumentInfo.Name, StringComparison.OrdinalIgnoreCase));
-            Assert.AreEqual(byDefault, commandLineArgumentInfo.SetupByDefault);
+            Assert.Multiple(() =>
+            {
+                Assert.That(commandLineArgumentInfo, Is.Not.Null);
+                Assert.That(string.Equals(argName, commandLineArgumentInfo.Name, StringComparison.OrdinalIgnoreCase), Is.True);
+                Assert.That(commandLineArgumentInfo.SetupByDefault, Is.EqualTo(byDefault));
+            });
         }
     }
 
@@ -186,7 +196,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         {
         }
 
-        public TestConsoleConfiguration(string[] arguments = null) : base(arguments)
+        public TestConsoleConfiguration(string[]? arguments = null) : base(arguments)
         {
         }
 

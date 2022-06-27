@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace SubRealTeam.ConsoleUtility.Common.Logging
 {
@@ -17,32 +15,25 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
         /// </summary>
         /// <param name="fileName">File name for log (default is current date in format YYYY-MM-DD.log)</param>
         /// <param name="filePath">File Path for log (default is current directory)</param>
-        public FileLogger(string fileName = null, string filePath = null)
+        public FileLogger(string? fileName = null, string? filePath = null)
         {
             var assembly = Assembly.GetEntryAssembly();
             if (assembly != null)
             {
-                fileName = fileName ?? $"{assembly.GetName().Name} {DateTime.Now:yyyy-MM-dd}.log";
-                filePath = filePath ?? Path.GetDirectoryName(assembly.Location);
-                _fileFullName = Path.Combine(filePath, fileName);
+                fileName ??= $"{assembly.GetName().Name} {DateTime.Now:yyyy-MM-dd}.log";
+                filePath ??= Path.GetDirectoryName(assembly.Location);
+                _fileFullName = Path.Combine(filePath!, fileName);
             }
             else
             {
                 _fileFullName = Path.Combine(Directory.GetCurrentDirectory(), $"Log {DateTime.Now:yyyy-MM-dd}.log");
             }
 
-            try
-            {
-                var fileStream = !File.Exists(_fileFullName) 
-                    ? File.Create(_fileFullName) 
-                    : File.OpenWrite(_fileFullName);
+            var fileStream = !File.Exists(_fileFullName) 
+                ? File.Create(_fileFullName) 
+                : File.OpenWrite(_fileFullName);
 
-                fileStream.Close();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            fileStream.Close();
         }
 
         private void AppendLog(string message)
@@ -81,7 +72,7 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
         }
 
         /// <inheritdoc />
-        public void Error(Exception exception, string message = null)
+        public void Error(Exception exception, string? message = null)
         {
             if (LogLevel > LogLevel.Error) return;
             AppendLog($"{GetFormattedDateTime()} [ERROR]: {message}. {exception.Message}");
@@ -101,7 +92,7 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
         }
 
         /// <inheritdoc />
-        public void Fatal(Exception exception, string message = null)
+        public void Fatal(Exception exception, string? message = null)
         {
             AppendLog($"{GetFormattedDateTime()} [FATAL]: {message}. {exception.Message}");
         }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using SubRealTeam.ConsoleUtility.Common.Logging;
@@ -49,7 +46,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// Console Configuration constructor
         /// </summary>
         /// <param name="arguments">Array of string to get command line arguments not from System.Environment</param>
-        protected ConsoleConfigurationBase(string[] arguments = null)
+        protected ConsoleConfigurationBase(string[]? arguments = null)
         {
             _arguments = arguments ?? Environment.GetCommandLineArgs().Skip(1).ToArray();
 
@@ -60,12 +57,12 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
 
             _attributedProps = publicProps.Select(x => new {property = x, customAttributes = x.GetCustomAttributes(true)})
                .Where(x => x.customAttributes.Any(y => y.GetType() == typeof(CommandLineArgumentAttribute)))
-               .Select(x => new CommandLinePropertyInfo
-                {
-                    PropertyInfo = x.property,
-                    Attribute = x.customAttributes.First(y => y.GetType() == typeof(CommandLineArgumentAttribute)) as CommandLineArgumentAttribute,
-                    Required = x.customAttributes.FirstOrDefault(y => y.GetType() == typeof(RequiredArgumentAttribute)) != null
-                })
+               .Select(x => new CommandLinePropertyInfo(
+                   x.property, 
+                   (x.customAttributes.First(y => y.GetType() == typeof(CommandLineArgumentAttribute)) as CommandLineArgumentAttribute)!, 
+                   null, 
+                   false, 
+                   x.customAttributes.FirstOrDefault(y => y.GetType() == typeof(RequiredArgumentAttribute)) != null))
                .ToArray();
 
             foreach (var prop in _attributedProps)
@@ -123,7 +120,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
             var splitter = match.Groups[1].Value;
             var value = Regex.Split(cmdValue, splitter);
 
-            object convertedValue;
+            object? convertedValue;
             try
             {
                 if (value.Length == 2 && !string.IsNullOrWhiteSpace(value[1]))
@@ -175,11 +172,11 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// <returns>Console output flag</returns>
         public string PrintHelp(bool printToConsole = true)
         {
-            Func<CommandLineArgumentAttribute, string> helpParameterDescription = x =>
+            string HelpParameterDescription(CommandLineArgumentAttribute x) => 
                 $"{x.Name} - {x.Description}{(x.DefaultValueIsSetup ? $" (default value is '{x.DefaultValue}')" : string.Empty)}";
 
             var helpMessage = string.Join(Environment.NewLine,
-                _attributedProps.Select(a => helpParameterDescription(a.Attribute)));
+                _attributedProps.Select(a => HelpParameterDescription(a.Attribute)));
 
             if (printToConsole) Console.WriteLine(helpMessage);
             return helpMessage;
@@ -189,7 +186,7 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
         /// Get command line argument information
         /// </summary>
         /// <param name="name">Argument name</param>
-        public CommandLineArgumentInfo GetCommandLineArgumentInfo(string name)
+        public CommandLineArgumentInfo? GetCommandLineArgumentInfo(string name)
         {
             return _attributedProps.Where(
                     x => string.Equals(x.Attribute.Name, name, StringComparison.OrdinalIgnoreCase))
@@ -206,11 +203,20 @@ namespace SubRealTeam.ConsoleUtility.Common.ConsoleConfiguration
 
     internal class CommandLinePropertyInfo
     {
+        public CommandLinePropertyInfo(PropertyInfo propertyInfo, CommandLineArgumentAttribute attribute, object? value, bool setupByDefault, bool required)
+        {
+            PropertyInfo = propertyInfo;
+            Attribute = attribute;
+            Value = value;
+            SetupByDefault = setupByDefault;
+            Required = required;
+        }
+
         public PropertyInfo PropertyInfo { get; set; }
 
         public CommandLineArgumentAttribute Attribute { get; set; }
 
-        public object Value { get; set; }
+        public object? Value { get; set; }
 
         public bool SetupByDefault { get; set; }
         

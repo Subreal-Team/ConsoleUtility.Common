@@ -1,3 +1,5 @@
+[![.NET](https://github.com/Subreal-Team/ConsoleUtility.Common/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Subreal-Team/ConsoleUtility.Common/actions/workflows/dotnet.yml)
+
 # ConsoleUtility.Common
 
 This library contains common classes which used on any system that supports .NET framework startup utilities console applications.

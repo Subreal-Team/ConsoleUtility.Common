@@ -9,14 +9,15 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         [OneTimeSetUp]
         public void TestSetUp()
         {
-            
+            Logger.AddInstance(new ConsoleLogger());
+            Logger.AddInstance(new FileLogger(filePath: Environment.CurrentDirectory));
         }
 
         [Test]
         public void TestLogDebug()
         {
-            Logger.AddInstance(new ConsoleLogger());
-            Logger.AddInstance(new FileLogger());
+            Logger.SetLogLevelForInstance<FileLogger>(LogLevel.Debug);
+            Logger.Debug("TEST DEBUG");
         }
     }
 }

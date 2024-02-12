@@ -1,0 +1,6 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Publish TestConsole to folder" type="DotNetFolderPublish" factoryName="Publish to folder">
+    <riderPublish configuration="Release" platform="Any CPU" produce_single_file="true" ready_to_run="true" runtime="linux-x64" self_contained="true" target_folder="$PROJECT_DIR$/TestConsole/bin/Release/net8.0/linux-x64/publish" target_framework="net8.0" uuid_high="7862534254325614160" uuid_low="-6429077737704016692" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -21,7 +21,7 @@ namespace SubRealTeam.ConsoleUtility.Common.Logging
             if (assembly != null)
             {
                 fileName ??= $"{assembly.GetName().Name} {DateTime.Now:yyyy-MM-dd}.log";
-                filePath ??= Path.GetDirectoryName(assembly.Location);
+                filePath ??= Path.GetDirectoryName(assembly.Location) ?? Environment.CurrentDirectory;
                 _fileFullName = Path.Combine(filePath!, fileName);
             }
             else

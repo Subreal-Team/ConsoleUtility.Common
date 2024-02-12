@@ -4,11 +4,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>default</LangVersion>
-        <TargetFrameworks>net6.0;netstandard2.1</TargetFrameworks>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>2.0.1-RC1</PackageVersion>
+        <PackageVersion>2.0.1-RC2</PackageVersion>
         <Title>SubRealTeam.ConsoleUtility.Common</Title>
         <Authors>SubReal Team</Authors>
+        <AssemblyVersion>2.0.1.2</AssemblyVersion>
+        <FileVersion>2.0.1.2</FileVersion>
+        <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>

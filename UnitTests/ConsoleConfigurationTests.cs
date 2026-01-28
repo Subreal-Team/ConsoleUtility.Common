@@ -34,7 +34,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
             var testType = typeof(bool);
 
             var newVal = Convert.ChangeType(testVal, testType);
-            Assert.IsTrue((bool)newVal);
+            Assert.That((bool)newVal, Is.True);
 
             testVal = "10,";
             testType = typeof(int);
@@ -72,33 +72,33 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         public void WhenBoolArgAsOneDigit_ShouldSetTrue()
         {
             var testConfig = new TestConsoleConfiguration(new[] { "string=a", "bool=1" });
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(testConfig.NotValidParameters, Is.EqualTo(false));
                 Assert.That(testConfig.BoolArg, Is.EqualTo(true));
-            });
+            }
         }
 
         [Test]
         public void WhenBoolArgAsZeroDigit_ShouldSetFalse()
         {
             var testConfig = new TestConsoleConfiguration(new[] { "string=a", "bool=0" });
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(testConfig.NotValidParameters, Is.False);
                 Assert.That(testConfig.BoolArg, Is.EqualTo(false));
-            });
+            }
         }
 
         [Test]
         public void WhenBoolArgNotValidDigit_ShouldSetDefault()
         {
             var testConfig = new TestConsoleConfiguration(new[] { "bool=2" });
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(testConfig.NotValidParameters, Is.True);
                 Assert.That(testConfig.BoolArg, Is.EqualTo(default(bool)));
-            });
+            }
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
         public void WhenArgumentsIsNotDescribed_ShouldReturnDefault()
         {
             var testConfig = new TestConsoleConfiguration(new[] { "string=a" });
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(testConfig.StringArg, Is.EqualTo("a"));
                 Assert.That(testConfig.CharArg, Is.EqualTo(TestDefaultCharArg));
@@ -127,19 +127,19 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
 
                 Assert.That(testConfig.NotValidParametersMessages, Is.Empty);
                 Assert.That(testConfig.NotValidParameters, Is.False);
-            });
+            }
         }
 
         [Test]
         public void WhenRequiredArgumentNotSetup_ShouldAddNotValidParametersMessages()
         {
             var testConfig = new TestConsoleConfiguration();
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(testConfig.StringArg, Is.EqualTo(null));
                 Assert.That(testConfig.NotValidParametersMessages, Is.Not.Empty);
                 Assert.That(testConfig.NotValidParameters, Is.True);
-            });
+            }
             Assert.That(testConfig.NotValidParametersMessages[0], Is.EqualTo("Attribute 'string' requires a value"));
         }
 
@@ -181,12 +181,12 @@ namespace SubRealTeam.ConsoleUtility.Common.UnitTests
             var testConfig = new TestConsoleConfiguration(TestArguments);
 
             var commandLineArgumentInfo = testConfig.GetCommandLineArgumentInfo(argName);
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(commandLineArgumentInfo, Is.Not.Null);
-                Assert.That(string.Equals(argName, commandLineArgumentInfo.Name, StringComparison.OrdinalIgnoreCase), Is.True);
+                Assert.That(string.Equals(argName, commandLineArgumentInfo!.Name, StringComparison.OrdinalIgnoreCase), Is.True);
                 Assert.That(commandLineArgumentInfo.SetupByDefault, Is.EqualTo(byDefault));
-            });
+            }
         }
     }
 
